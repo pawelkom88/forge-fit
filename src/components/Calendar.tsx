@@ -62,24 +62,27 @@ export default function Calendar() {
         </div>
       </div>
       <div className=" h-12 border-2 p-2 mb-4 text-black">
-        Input date here - so user can type in date instead of ski mming through
+        Input date here - so user can type in date instead of skimming through
         the calendar{" "}
       </div>
-
-      <div className="grid grid-cols-7 gap-2 sm:gap-4 flex-grow">
+      {/*// todo: aria region : you are entering a calendar ?*/}
+      <ol className="grid grid-cols-7 gap-2 sm:gap-4 flex-grow">
         {["S", "M", "T", "W", "T", "F", "S"].map((day) => (
-          <div
+          <abbr
+            title="Monday"
             key={day}
             className="text-center font-semibold text-gray-500 text-sm sm:text-base"
           >
             {day}
-          </div>
+          </abbr>
         ))}
         {monthDays.map((day) => {
           const dayWorkouts = workouts.filter((workout) =>
             isSameDay(workout.date, day),
           );
+
           return (
+            // will be link ?
             <button
               key={day.toISOString()}
               // todo change to link id
@@ -87,26 +90,30 @@ export default function Calendar() {
               onMouseEnter={() => setHoveredWorkout(dayWorkouts[0] || null)}
               onMouseLeave={() => setHoveredWorkout(null)}
               className={`
-                relative p-1 sm:p-2 rounded-lg text-center transition-colors duration-200 text-sm sm:text-base
+                relative p-1 sm:p-2 rounded-lg text-center transition-colors duration-200 text-sm sm:text-base hover:bg-red-200 hover:shadow
                 ${!isSameMonth(day, currentMonth) ? "text-gray-300" : "text-gray-700"}
                 ${isToday(day) ? "bg-blue-100 font-semibold" : ""}
                 ${isSameMonth(day, currentMonth) ? "hover:bg-gray-100" : ""}
               `}
             >
-              {format(day, "d")}
-              <div className="absolute bottom-0 right-0 flex">
+              <time dateTime={format(day, "yyyy-MM-dd")}>
+                {format(day, "d")}
+              </time>
+
+              <div className="absolute flex">
                 {dayWorkouts.map((workout, index) => (
                   <div key={index} className="ml-1">
-                    {getWorkoutIcon(workout.type)}
+                    maybe instead of hover show modal with summary and link to
+                    full workout ?
                   </div>
                 ))}
               </div>
             </button>
           );
         })}
-      </div>
+      </ol>
       {hoveredWorkout && (
-        <div className="absolute bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-10">
+        <div className="absolute bg-red-300 border border-gray-200 rounded-lg shadow-lg p-2 z-10">
           <p className="font-semibold">
             {format(hoveredWorkout.date, "MMMM d, yyyy")}
           </p>
