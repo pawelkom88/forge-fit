@@ -8,7 +8,7 @@ import {
   isSameDay,
   isToday,
 } from "date-fns";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Circle } from "lucide-react";
 import { Workout, workouts } from "@/utils/workoutData";
 
 // function isSameDay(date1: Date, date2: Date) {
@@ -21,6 +21,7 @@ export default function Calendar() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [hoveredWorkout, setHoveredWorkout] = useState<Workout | null>(null);
 
+  // TODO : abstract to hook ? try to make it reusable ?
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);
   const monthDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
@@ -40,9 +41,22 @@ export default function Calendar() {
   };
 
   return (
-    <div className="bg-foreground rounded-lg p-2 sm:p-4 h-full flex flex-col border">
+    <section
+      className="bg-foreground rounded-lg p-2 sm:p-4 h-full flex flex-col border"
+      aria-labelledby="calendar-label"
+      aria-describedby="calendar-description"
+    >
       <div className="flex justify-between items-center mb-4 sm:mb-6">
-        <h2 className="text-xl sm:text-2xl font-semibold text-textContrast">
+        <h2 className="sr-only" id="calendar-label">
+          Workout Calendar
+        </h2>
+        <p className="sr-only" id="calendar-description">
+          Choose a day for your workout
+        </p>
+        <h2
+          aria-hidden="true"
+          className="text-xl sm:text-2xl font-semibold text-textContrast"
+        >
           {format(currentMonth, "MMMM yyyy")}
         </h2>
 
@@ -61,11 +75,24 @@ export default function Calendar() {
           </button>
         </div>
       </div>
+
+      <dl className="text-black flex gap-2 mb-2">
+        <dt>
+          <Circle aria-hidden="true" className="text-green-500" />
+        </dt>
+        <dd>Past workouts</dd>
+        <dd>&#124;</dd>
+        <dt>
+          <Circle aria-hidden="true" className="text-red-500" />
+        </dt>
+        <dd>Today's date</dd>
+      </dl>
+
       <div className=" h-12 border-2 p-2 mb-4 text-black">
         Input date here - so user can type in date instead of skimming through
         the calendar{" "}
       </div>
-      {/*// todo: aria region : you are entering a calendar ?*/}
+
       <ol className="grid grid-cols-7 gap-2 sm:gap-4 flex-grow">
         {["S", "M", "T", "W", "T", "F", "S"].map((day) => (
           <abbr
@@ -120,6 +147,6 @@ export default function Calendar() {
           <p className="text-sm">{hoveredWorkout.summary}</p>
         </div>
       )}
-    </div>
+    </section>
   );
 }

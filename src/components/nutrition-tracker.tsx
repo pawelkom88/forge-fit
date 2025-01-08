@@ -1,18 +1,18 @@
-import { useState } from 'react'
-import { Plus, ChevronDown, ChevronUp } from 'lucide-react'
-import { format } from 'date-fns'
-import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
-import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { useState } from "react";
+import { Plus, ChevronDown, ChevronUp } from "lucide-react";
+import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
-import { DailyNutrition, Meal, Product, Macros } from '@/types/nutrition'
+} from "@/components/ui/accordion";
+import { DailyNutrition, Meal, Product, Macros } from "@/types/nutrition";
 
 const INITIAL_STATE: DailyNutrition = {
   target: {
@@ -28,42 +28,42 @@ const INITIAL_STATE: DailyNutrition = {
     fat: 0,
   },
   meals: [],
-}
+};
 
 export function NutritionTracker() {
-  const [nutrition, setNutrition] = useState<DailyNutrition>(INITIAL_STATE)
+  const [nutrition, setNutrition] = useState<DailyNutrition>(INITIAL_STATE);
   const [newMeal, setNewMeal] = useState<Meal>({
-    id: '',
-    name: '',
+    id: "",
+    name: "",
     products: [],
     timestamp: new Date(),
-  })
+  });
   const [newProduct, setNewProduct] = useState<Product>({
-    name: '',
+    name: "",
     quantity: 1,
     macros: { protein: 0, carbs: 0, fat: 0 },
     calories: 0,
-  })
+  });
 
   const addProductToMeal = () => {
     if (newProduct.name) {
-      setNewMeal(prev => ({
+      setNewMeal((prev) => ({
         ...prev,
         products: [...prev.products, newProduct],
-      }))
+      }));
       setNewProduct({
-        name: '',
+        name: "",
         quantity: 1,
         macros: { protein: 0, carbs: 0, fat: 0 },
         calories: 0,
-      })
+      });
     }
-  }
+  };
 
   const addMeal = () => {
     if (newMeal.name && newMeal.products.length > 0) {
-      const mealWithTotals = calculateMealTotals(newMeal)
-      setNutrition(prev => ({
+      const mealWithTotals = calculateMealTotals(newMeal);
+      setNutrition((prev) => ({
         ...prev,
         current: {
           calories: prev.current.calories + mealWithTotals.calories,
@@ -71,29 +71,38 @@ export function NutritionTracker() {
           carbs: prev.current.carbs + mealWithTotals.macros.carbs,
           fat: prev.current.fat + mealWithTotals.macros.fat,
         },
-        meals: [...prev.meals, { ...mealWithTotals, id: Date.now().toString() }],
-      }))
+        meals: [
+          ...prev.meals,
+          { ...mealWithTotals, id: Date.now().toString() },
+        ],
+      }));
       setNewMeal({
-        id: '',
-        name: '',
+        id: "",
+        name: "",
         products: [],
         timestamp: new Date(),
-      })
+      });
     }
-  }
+  };
 
-  const calculateMealTotals = (meal: Meal): Meal & { calories: number, macros: Macros } => {
-    const totals = meal.products.reduce((acc, product) => ({
-      calories: acc.calories + product.calories * product.quantity,
-      macros: {
-        protein: acc.macros.protein + product.macros.protein * product.quantity,
-        carbs: acc.macros.carbs + product.macros.carbs * product.quantity,
-        fat: acc.macros.fat + product.macros.fat * product.quantity,
-      },
-    }), { calories: 0, macros: { protein: 0, carbs: 0, fat: 0 } })
+  const calculateMealTotals = (
+    meal: Meal,
+  ): Meal & { calories: number; macros: Macros } => {
+    const totals = meal.products.reduce(
+      (acc, product) => ({
+        calories: acc.calories + product.calories * product.quantity,
+        macros: {
+          protein:
+            acc.macros.protein + product.macros.protein * product.quantity,
+          carbs: acc.macros.carbs + product.macros.carbs * product.quantity,
+          fat: acc.macros.fat + product.macros.fat * product.quantity,
+        },
+      }),
+      { calories: 0, macros: { protein: 0, carbs: 0, fat: 0 } },
+    );
 
-    return { ...meal, ...totals }
-  }
+    return { ...meal, ...totals };
+  };
 
   return (
     <div className="space-y-6">
@@ -137,7 +146,9 @@ export function NutritionTracker() {
               <Input
                 id="meal-name"
                 value={newMeal.name}
-                onChange={(e) => setNewMeal(prev => ({ ...prev, name: e.target.value }))}
+                onChange={(e) =>
+                  setNewMeal((prev) => ({ ...prev, name: e.target.value }))
+                }
                 placeholder="e.g., Breakfast"
               />
             </div>
@@ -149,7 +160,12 @@ export function NutritionTracker() {
                   <Input
                     id="product-name"
                     value={newProduct.name}
-                    onChange={(e) => setNewProduct(prev => ({ ...prev, name: e.target.value }))}
+                    onChange={(e) =>
+                      setNewProduct((prev) => ({
+                        ...prev,
+                        name: e.target.value,
+                      }))
+                    }
                     placeholder="e.g., Chicken Breast"
                   />
                 </div>
@@ -159,7 +175,12 @@ export function NutritionTracker() {
                     id="product-quantity"
                     type="number"
                     value={newProduct.quantity}
-                    onChange={(e) => setNewProduct(prev => ({ ...prev, quantity: Number(e.target.value) }))}
+                    onChange={(e) =>
+                      setNewProduct((prev) => ({
+                        ...prev,
+                        quantity: Number(e.target.value),
+                      }))
+                    }
                     placeholder="e.g., 100"
                   />
                 </div>
@@ -169,7 +190,15 @@ export function NutritionTracker() {
                     id="product-protein"
                     type="number"
                     value={newProduct.macros.protein}
-                    onChange={(e) => setNewProduct(prev => ({ ...prev, macros: { ...prev.macros, protein: Number(e.target.value) } }))}
+                    onChange={(e) =>
+                      setNewProduct((prev) => ({
+                        ...prev,
+                        macros: {
+                          ...prev.macros,
+                          protein: Number(e.target.value),
+                        },
+                      }))
+                    }
                     placeholder="e.g., 20"
                   />
                 </div>
@@ -179,7 +208,15 @@ export function NutritionTracker() {
                     id="product-carbs"
                     type="number"
                     value={newProduct.macros.carbs}
-                    onChange={(e) => setNewProduct(prev => ({ ...prev, macros: { ...prev.macros, carbs: Number(e.target.value) } }))}
+                    onChange={(e) =>
+                      setNewProduct((prev) => ({
+                        ...prev,
+                        macros: {
+                          ...prev.macros,
+                          carbs: Number(e.target.value),
+                        },
+                      }))
+                    }
                     placeholder="e.g., 0"
                   />
                 </div>
@@ -189,7 +226,12 @@ export function NutritionTracker() {
                     id="product-fat"
                     type="number"
                     value={newProduct.macros.fat}
-                    onChange={(e) => setNewProduct(prev => ({ ...prev, macros: { ...prev.macros, fat: Number(e.target.value) } }))}
+                    onChange={(e) =>
+                      setNewProduct((prev) => ({
+                        ...prev,
+                        macros: { ...prev.macros, fat: Number(e.target.value) },
+                      }))
+                    }
                     placeholder="e.g., 5"
                   />
                 </div>
@@ -199,7 +241,12 @@ export function NutritionTracker() {
                     id="product-calories"
                     type="number"
                     value={newProduct.calories}
-                    onChange={(e) => setNewProduct(prev => ({ ...prev, calories: Number(e.target.value) }))}
+                    onChange={(e) =>
+                      setNewProduct((prev) => ({
+                        ...prev,
+                        calories: Number(e.target.value),
+                      }))
+                    }
                     placeholder="e.g., 165"
                   />
                 </div>
@@ -212,6 +259,7 @@ export function NutritionTracker() {
             {newMeal.products.length > 0 && (
               <div>
                 <h4 className="font-medium mb-2">Products in this meal:</h4>
+                {/*// swap with <menu tag ?*/}
                 <ul className="list-disc list-inside">
                   {newMeal.products.map((product, index) => (
                     <li key={index}>
@@ -238,14 +286,21 @@ export function NutritionTracker() {
               <AccordionTrigger>
                 <div className="flex justify-between items-center w-full">
                   <span>{meal.name}</span>
-                  <span className="text-sm text-gray-500">{format(meal.timestamp, 'HH:mm')}</span>
+                  <span className="text-sm text-gray-500">
+                    {format(meal.timestamp, "HH:mm")}
+                  </span>
                 </div>
               </AccordionTrigger>
               <AccordionContent>
                 <div className="space-y-2">
                   {meal.products.map((product, productIndex) => (
-                    <div key={productIndex} className="flex justify-between items-center">
-                      <span>{product.name} (x{product.quantity})</span>
+                    <div
+                      key={productIndex}
+                      className="flex justify-between items-center"
+                    >
+                      <span>
+                        {product.name} (x{product.quantity})
+                      </span>
                       <span>{product.calories * product.quantity} kcal</span>
                     </div>
                   ))}
@@ -255,8 +310,12 @@ export function NutritionTracker() {
                       <span>{calculateMealTotals(meal).calories} kcal</span>
                     </div>
                     <div className="text-sm text-gray-500">
-                      <span>P: {calculateMealTotals(meal).macros.protein}g</span>
-                      <span className="mx-2">C: {calculateMealTotals(meal).macros.carbs}g</span>
+                      <span>
+                        P: {calculateMealTotals(meal).macros.protein}g
+                      </span>
+                      <span className="mx-2">
+                        C: {calculateMealTotals(meal).macros.carbs}g
+                      </span>
                       <span>F: {calculateMealTotals(meal).macros.fat}g</span>
                     </div>
                   </div>
@@ -267,11 +326,21 @@ export function NutritionTracker() {
         </Accordion>
       </div>
     </div>
-  )
+  );
 }
 
-function MacroProgress({ label, current, target, unit }: { label: string; current: number; target: number; unit: string }) {
-  const progress = (current / target) * 100
+function MacroProgress({
+  label,
+  current,
+  target,
+  unit,
+}: {
+  label: string;
+  current: number;
+  target: number;
+  unit: string;
+}) {
+  const progress = (current / target) * 100;
   return (
     <div className="space-y-2">
       <div className="flex justify-between text-sm">
@@ -282,6 +351,5 @@ function MacroProgress({ label, current, target, unit }: { label: string; curren
       </div>
       <Progress value={progress} />
     </div>
-  )
+  );
 }
-
