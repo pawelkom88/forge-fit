@@ -22,15 +22,18 @@ export function ModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme(THEME_CONFIG.light)}>
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme(THEME_CONFIG.dark)}>
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme(THEME_CONFIG.system)}>
-          System
-        </DropdownMenuItem>
+        {Object.entries(THEME_CONFIG).map(([key, value]) => {
+          const themeName = key.charAt(0).toUpperCase() + key.slice(1);
+          return (
+            <DropdownMenuItem
+              className="cursor-pointer hover:bg-textContrast"
+              key={key}
+              onClick={() => setTheme(value)}
+            >
+              {themeName}
+            </DropdownMenuItem>
+          );
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
   );

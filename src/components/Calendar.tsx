@@ -1,18 +1,11 @@
-import { format, isSameMonth, isSameDay, isToday, isBefore } from "date-fns";
+import { format, isSameMonth, isSameDay, isToday } from "date-fns";
 import { ChevronLeft, ChevronRight, Circle } from "lucide-react";
 import { workouts } from "@/utils/workoutData";
 import { useCalendar } from "@/hooks/useCalendar.tsx";
-import { Union } from "@/utils/ts-helpers.ts";
-
-const DAYS_OF_WEEK = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-] as const;
+import { DAYS_OF_WEEK } from "@/utils/constants.ts";
+import { Button } from "@/components/ui/button.tsx";
+import { Input } from "@/components/ui/input.tsx";
+import { Label } from "@/components/ui/label.tsx";
 
 // function isSameDay(date1: Date, date2: Date) {
 //   return date1.getFullYear() === date2.getFullYear() &&
@@ -33,31 +26,38 @@ export default function Calendar() {
       <div className="flex justify-between items-center mb-4 sm:mb-6">
         <CalendarHeading currentMonth={currentMonth} />
         <div className="flex space-x-2">
-          <button
+          <Button
+            variant="outline"
+            aria-label="Previous month"
             onClick={goToPreviousMonth}
             className="p-2 rounded-full hover:bg-gray-100 bg-textContrast"
           >
-            <ChevronLeft size={24} />
-          </button>
-          <button
+            <ChevronLeft aria-hidden="true" size={24} />
+          </Button>
+          <Button
+            variant="outline"
+            aria-label="Next month"
             onClick={goToNextMonth}
             className="p-2 rounded-full hover:bg-gray-100 bg-textContrast"
           >
-            <ChevronRight size={24} />
-          </button>
+            <ChevronRight aria-hidden="true" size={24} />
+          </Button>
         </div>
       </div>
+      <Label className="text-primary mt-4" htmlFor="workout-date">
+        Workout date
+      </Label>
+      <Input
+        id="workout-date"
+        type="text"
+        placeholder="Enter workout date in YYYY-MM-DD format"
+        className="max-w-96 h-12 p-2 mb-8 "
+      />
       <WorkoutLegend />
-      <div className=" h-12 border-2 p-2 mb-4 text-black">
-        Input date here - so user can type in date instead of skimming through
-        the calendar{" "}
-      </div>
-
-      <ol className="grid grid-cols-7 auto-rows-max gap-2 sm:gap-4 flex-grow">
+      <hr className="col-span-7" />
+      <ol className="grid grid-cols-7 gap-2 sm:gap-4 flex-grow">
         <DayOfWeekLabels />
-
         <hr className="col-span-7" />
-
         {monthDays.map((day) => {
           const isWorkoutDay = workouts.some((workout) =>
             isSameDay(workout.date, day),
@@ -112,7 +112,7 @@ function DayButton({
 
 function WorkoutLegend() {
   return (
-    <dl className="text-black flex gap-2 mb-2">
+    <dl className="text-black flex gap-2 mb-8">
       <dt>
         <Circle aria-hidden="true" className="text-[#00987d]" />
       </dt>
@@ -126,7 +126,6 @@ function WorkoutLegend() {
   );
 }
 
-// Add this component definition outside the Calendar function
 function CalendarHeading({ currentMonth }: { currentMonth: Date }) {
   return (
     <div>
@@ -153,7 +152,7 @@ function DayOfWeekLabels() {
         <abbr
           title={day}
           key={day}
-          className="text-center font-bold text-black text-sm sm:text-base no-underline"
+          className="pt-4 text-center font-bold text-black text-sm sm:text-base no-underline"
         >
           {day.charAt(0)}
         </abbr>

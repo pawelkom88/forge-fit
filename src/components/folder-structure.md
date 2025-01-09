@@ -3,7 +3,6 @@
 ```markdown
 src/
 ├── app/
-│   └── main.tsx              # Main app layout
 ├── pages/
 │   ├── dashboard/
 │   │   └── workout-day.page.tsx
