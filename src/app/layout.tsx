@@ -6,7 +6,6 @@ import { useLoaderData } from "react-router-dom";
 
 export default function App() {
   const workouts = useLoaderData();
-  console.log(useLoaderData());
   return (
     <div className="max-w-screen-2xl mx-auto flex h-screen bg-foreground">
       <main className="bg-background flex-1 p-4 sm:p-6 lg:p-8">
@@ -25,7 +24,7 @@ export default function App() {
           <ModeToggle />
         </div>
         <p className="my-2">Track your gym sessions and nutrition</p>
-        <Calendar />
+        <Calendar workouts={workouts} />
       </main>
     </div>
   );

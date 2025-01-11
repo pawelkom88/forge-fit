@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { eachDayOfInterval, endOfMonth, startOfMonth } from "date-fns";
+import { eachDayOfInterval, endOfMonth, getDay, startOfMonth } from "date-fns";
 
 export function useCalendar() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  // TODO : abstract to hook ? try to make it reusable ?
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);
   const monthDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
+  const startDay = getDay(monthStart);
 
   const goToPreviousMonth = () => {
     setCurrentMonth(
@@ -24,6 +24,7 @@ export function useCalendar() {
   };
 
   return {
+    startDay,
     currentMonth,
     monthDays,
     goToPreviousMonth,

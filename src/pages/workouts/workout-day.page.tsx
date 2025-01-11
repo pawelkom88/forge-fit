@@ -10,8 +10,7 @@ import {
 import { WeekNavigator } from "@/components/week-navigator.tsx";
 import { WorkoutTracker } from "@/components/workout-tracker.tsx";
 import { NutritionTracker } from "@/components/nutrition-tracker.tsx";
-import { useParams } from "react-router";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useParams } from "react-router-dom";
 
 interface WorkoutDayPageProps {
   params: {
@@ -21,14 +20,12 @@ interface WorkoutDayPageProps {
 
 export default function WorkoutDayPage() {
   const data = useLoaderData();
-  console.log(data);
+  const { workoutDate } = useParams();
 
-  const params = useParams();
-
-  console.log(params);
+  console.log(workoutDate);
 
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
+    <section className="bg-background container mx-auto p-4 max-w-4xl">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <h1 className="text-2xl font-bold">
@@ -40,7 +37,7 @@ export default function WorkoutDayPage() {
         </div>
       </div>
 
-      {/*<WeekNavigator currentDate={workoutDate} />*/}
+      <WeekNavigator workoutDate={workoutDate} />
 
       <Tabs defaultValue="workout" className="mt-6">
         <TabsList className="grid w-full grid-cols-2">
@@ -54,6 +51,6 @@ export default function WorkoutDayPage() {
           <NutritionTracker />
         </TabsContent>
       </Tabs>
-    </div>
+    </section>
   );
 }

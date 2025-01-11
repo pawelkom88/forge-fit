@@ -1,15 +1,24 @@
 import { format, isSameDay, isToday } from "date-fns";
 import { ChevronLeft, ChevronRight, Circle } from "lucide-react";
-import { workouts } from "@/utils/workoutData.ts";
 import { useCalendar } from "@/hooks/useCalendar.tsx";
-import { DAYS_OF_WEEK } from "@/utils/constants.ts";
 import { WorkoutDateInput } from "@/components/workout-date-input/WorkoutDateInput.tsx";
 import { Link } from "react-router-dom";
-import { DATE_PATTERN } from "@/lib/utils.ts";
+import { Workout } from "@/utils/workoutData.ts";
+import { getWeekDays } from "@/utils/helpers.ts";
+import { DATE_PATTERN } from "@/utils/constants.ts";
 
-export default function Calendar() {
-  const { currentMonth, monthDays, goToPreviousMonth, goToNextMonth } =
-    useCalendar();
+interface Props {
+  workouts: Workout[];
+}
+
+export default function Calendar({ workouts }: Props) {
+  const {
+    startDay,
+    currentMonth,
+    monthDays,
+    goToPreviousMonth,
+    goToNextMonth,
+  } = useCalendar();
 
   return (
     <section
@@ -41,9 +50,11 @@ export default function Calendar() {
       <WorkoutDateInput />
       <WorkoutLegend />
       <hr className="col-span-7" />
+      {/*// TODO: start month from the correct day, in january example it is wednesday so need to create empty cells*/}
       <ol className="grid grid-cols-7 gap-4">
         <DayOfWeekLabels />
         <hr className="col-span-7" />
+        <EmptyCells startDay={startDay} />
         {monthDays.map((day) => {
           const isWorkoutDay = workouts.some((workout) =>
             isSameDay(workout.date, day),
@@ -53,7 +64,6 @@ export default function Calendar() {
               key={day.toISOString()}
               isWorkoutDay={isWorkoutDay}
               date={day}
-              currentMonth={currentMonth}
             />
           );
         })}
@@ -65,7 +75,6 @@ export default function Calendar() {
 interface DayButtonProps {
   date: Date;
   isWorkoutDay: boolean;
-  currentMonth: Date;
 }
 
 function WorkoutDetailsLink({ date, isWorkoutDay }: DayButtonProps) {
@@ -117,19 +126,27 @@ function CalendarHeading({ currentMonth }: { currentMonth: Date }) {
 function DayOfWeekLabels() {
   return (
     <>
-      {DAYS_OF_WEEK.map((day) => {
-        const dayAbbreviation = day.slice(0, 3);
-
+      {getWeekDays().map((day) => {
         return (
           <abbr
-            title={day}
-            key={day}
+            title={day.toISOString()}
+            key={day.toISOString()}
             className="pt-4 text-center font-bold text-purple text-sm sm:text-base no-underline"
           >
-            {dayAbbreviation}
+            {format(day, DATE_PATTERN.THREE_LETTERS)}
           </abbr>
         );
       })}
+    </>
+  );
+}
+
+function EmptyCells({ startDay }: { startDay: number }) {
+  return (
+    <>
+      {Array.from({ length: startDay }).map((_, index) => (
+        <div key={`empty-${index}`}></div>
+      ))}
     </>
   );
 }
