@@ -4,6 +4,8 @@ import { workouts } from "@/utils/workoutData.ts";
 import { useCalendar } from "@/hooks/useCalendar.tsx";
 import { DAYS_OF_WEEK } from "@/utils/constants.ts";
 import { WorkoutDateInput } from "@/components/workout-date-input/WorkoutDateInput.tsx";
+import { Link } from "react-router-dom";
+import { DATE_PATTERN } from "@/lib/utils.ts";
 
 export default function Calendar() {
   const { currentMonth, monthDays, goToPreviousMonth, goToNextMonth } =
@@ -46,15 +48,11 @@ export default function Calendar() {
           const isWorkoutDay = workouts.some((workout) =>
             isSameDay(workout.date, day),
           );
-          // TODO: when click on the link, pass params as date/id below and use it in mini calendar
           return (
             <WorkoutDetailsLink
               key={day.toISOString()}
               isWorkoutDay={isWorkoutDay}
               date={day}
-              onWorkoutDaySelection={() =>
-                console.log(`/day/${format(day, "yyyy-MM-dd")}`)
-              }
               currentMonth={currentMonth}
             />
           );
@@ -67,27 +65,24 @@ export default function Calendar() {
 interface DayButtonProps {
   date: Date;
   isWorkoutDay: boolean;
-  onWorkoutDaySelection: () => void;
   currentMonth: Date;
 }
 
-function WorkoutDetailsLink({
-  date,
-  isWorkoutDay,
-  onWorkoutDaySelection,
-}: DayButtonProps) {
+function WorkoutDetailsLink({ date, isWorkoutDay }: DayButtonProps) {
+  console.log(date);
   return (
-    // LINK !
-    <button
-      onClick={onWorkoutDaySelection}
+    <Link
+      to={`${format(date, DATE_PATTERN.YYYY_MM_DD)}`}
       className={`
         relative min-h-8 sm:min-h-20 p-1 sm:p-2 rounded-lg text-contrast hover:text-contrastReversed text-center transition-colors duration-200 text-md sm:text-xl hover:bg-contrast hover:shadow focus-visible:bg-yellow-500
         ${isToday(date) ? "bg-teriary text-white font-semibold shadow shadow-teriary" : ""}
         ${isWorkoutDay ? "bg-[#009495] text-white shadow shadow-[#009495]" : ""}
       `}
     >
-      <time dateTime={format(date, "yyyy-MM-dd")}>{format(date, "d")}</time>
-    </button>
+      <time dateTime={format(date, DATE_PATTERN.YYYY_MM_DD)}>
+        {format(date, DATE_PATTERN.DAY)}
+      </time>
+    </Link>
   );
 }
 
@@ -123,15 +118,19 @@ function CalendarHeading({ currentMonth }: { currentMonth: Date }) {
 function DayOfWeekLabels() {
   return (
     <>
-      {DAYS_OF_WEEK.map((day) => (
-        <abbr
-          title={day}
-          key={day}
-          className="pt-4 text-center font-bold text-purple text-sm sm:text-base no-underline"
-        >
-          {day.charAt(0)}
-        </abbr>
-      ))}
+      {DAYS_OF_WEEK.map((day) => {
+        const dayAbbreviation = day.slice(0, 3);
+
+        return (
+          <abbr
+            title={day}
+            key={day}
+            className="pt-4 text-center font-bold text-purple text-sm sm:text-base no-underline"
+          >
+            {dayAbbreviation}
+          </abbr>
+        );
+      })}
     </>
   );
 }

@@ -1,32 +1,42 @@
-import { format, parseISO } from 'date-fns'
-import { Calendar } from 'lucide-react'
-import { Button } from '@/components/ui/button.tsx'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx'
-import { WeekNavigator } from '@/components/week-navigator.tsx'
-import { WorkoutTracker } from '@/components/workout-tracker.tsx'
-import { NutritionTracker } from '@/components/nutrition-tracker.tsx'
+import { format, parseISO } from "date-fns";
+import { Calendar } from "lucide-react";
+import { Button } from "@/components/ui/button.tsx";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs.tsx";
+import { WeekNavigator } from "@/components/week-navigator.tsx";
+import { WorkoutTracker } from "@/components/workout-tracker.tsx";
+import { NutritionTracker } from "@/components/nutrition-tracker.tsx";
+import { useParams } from "react-router";
 
 interface WorkoutDayPageProps {
   params: {
-    date: string // Format: YYYY-MM-DD
-  }
+    date: string; // Format: YYYY-MM-DD
+  };
 }
 
-export default function WorkoutDayPage({ params }: WorkoutDayPageProps) {
-  const date = parseISO(params.date)
+export default function WorkoutDayPage() {
+  const { workoutDate } = useParams();
+
+  console.log(workoutDate);
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-bold">{format(date, 'EEEE, MMMM d')}</h1>
+          <h1 className="text-2xl font-bold">
+            {format(workoutDate, "EEEE, MMMM d")}
+          </h1>
           <Button variant="ghost" size="icon">
             <Calendar className="h-5 w-5" />
           </Button>
         </div>
       </div>
 
-      <WeekNavigator currentDate={date} />
+      <WeekNavigator currentDate={workoutDate} />
 
       <Tabs defaultValue="workout" className="mt-6">
         <TabsList className="grid w-full grid-cols-2">
@@ -41,6 +51,5 @@ export default function WorkoutDayPage({ params }: WorkoutDayPageProps) {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
-
