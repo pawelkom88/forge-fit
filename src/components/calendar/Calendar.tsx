@@ -3,8 +3,7 @@ import { ChevronLeft, ChevronRight, Circle } from "lucide-react";
 import { workouts } from "@/utils/workoutData.ts";
 import { useCalendar } from "@/hooks/useCalendar.tsx";
 import { DAYS_OF_WEEK } from "@/utils/constants.ts";
-import { Input } from "@/components/ui/input.tsx";
-import { Label } from "@/components/ui/label.tsx";
+import { WorkoutDateInput } from "@/components/workout-date-input/WorkoutDateInput.tsx";
 
 export default function Calendar() {
   const { currentMonth, monthDays, goToPreviousMonth, goToNextMonth } =
@@ -37,15 +36,7 @@ export default function Calendar() {
           </button>
         </div>
       </div>
-      <Label className="mt-4 mb-2" htmlFor="workout-date">
-        Workout date
-      </Label>
-      <Input
-        id="workout-date"
-        type="text"
-        placeholder="Enter workout date in YYYY-MM-DD format"
-        className="max-w-80 h-12 p-2 mb-8 focus-visible:bg-yellow-500 focus-visible:placeholder:text-black placeholder:text-sm"
-      />
+      <WorkoutDateInput />
       <WorkoutLegend />
       <hr className="col-span-7" />
       <ol className="grid grid-cols-7 gap-4">
@@ -57,8 +48,7 @@ export default function Calendar() {
           );
           // TODO: when click on the link, pass params as date/id below and use it in mini calendar
           return (
-            // will be link ? - if click day is a workout day prepopulate data if not show blank
-            <DayButton
+            <WorkoutDetailsLink
               key={day.toISOString()}
               isWorkoutDay={isWorkoutDay}
               date={day}
@@ -81,12 +71,13 @@ interface DayButtonProps {
   currentMonth: Date;
 }
 
-function DayButton({
+function WorkoutDetailsLink({
   date,
   isWorkoutDay,
   onWorkoutDaySelection,
 }: DayButtonProps) {
   return (
+    // LINK !
     <button
       onClick={onWorkoutDaySelection}
       className={`

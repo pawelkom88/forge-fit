@@ -10,7 +10,6 @@ export default function App() {
         <div className="flex gap-2">
           <div className="mb-2 flex-grow">
             <h1 className="text-2xl sm:text-3xl font-bold">Workout Calendar</h1>
-            <p className="mt-2">Track your gym sessions and nutrition</p>
           </div>
           <Button
             size="icon"
@@ -22,6 +21,7 @@ export default function App() {
           </Button>
           <ModeToggle />
         </div>
+        <p className="my-2">Track your gym sessions and nutrition</p>
         <Calendar />
       </main>
     </div>
