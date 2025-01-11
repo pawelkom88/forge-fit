@@ -24,11 +24,13 @@ type ThemeProviderProps = {
 };
 
 type ThemeProviderState = {
+  isLightTheme: boolean | null;
   theme: Theme;
   setTheme: (theme: Theme) => void;
 };
 
 const initialState: ThemeProviderState = {
+  isLightTheme: null,
   theme: THEME_CONFIG.system,
   setTheme: () => null,
 };
@@ -55,6 +57,7 @@ export function ThemeProvider({
   }, [theme]);
 
   const value = {
+    isLightTheme: theme === THEME_CONFIG.light,
     theme,
     setTheme: (theme: Theme) => {
       localStorage.setItem(storageKey, theme);

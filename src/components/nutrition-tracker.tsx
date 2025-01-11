@@ -13,6 +13,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { DailyNutrition, Meal, Product, Macros } from "@/types/nutrition";
+import { useTheme } from "@/components/theme-provider.tsx";
 
 const INITIAL_STATE: DailyNutrition = {
   target: {
@@ -31,6 +32,7 @@ const INITIAL_STATE: DailyNutrition = {
 };
 
 export function NutritionTracker() {
+  const { isLightTheme } = useTheme();
   const [nutrition, setNutrition] = useState<DailyNutrition>(INITIAL_STATE);
   const [newMeal, setNewMeal] = useState<Meal>({
     id: "",
@@ -251,7 +253,10 @@ export function NutritionTracker() {
                   />
                 </div>
               </div>
-              <Button onClick={addProductToMeal} className="w-full">
+              <Button
+                onClick={addProductToMeal}
+                className={`w-full ${isLightTheme ? "bg-purple" : "bg-white"} ${isLightTheme ? "text-white" : "text-black"}`}
+              >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Product
               </Button>
@@ -269,7 +274,10 @@ export function NutritionTracker() {
                 </ul>
               </div>
             )}
-            <Button onClick={addMeal} className="w-full">
+            <Button
+              onClick={addMeal}
+              className={`w-full ${isLightTheme ? "bg-purple" : "bg-white"} ${isLightTheme ? "text-white" : "text-black"} `}
+            >
               <Plus className="mr-2 h-4 w-4" />
               Add Meal
             </Button>

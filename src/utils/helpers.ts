@@ -1,5 +1,6 @@
 import { Theme, THEME_CONFIG } from "@/components/theme-provider.tsx";
 import { addDays, startOfWeek } from "date-fns";
+import { DateString } from "@/utils/ts-helpers.ts";
 
 export function removeThemeClasses(
   themes: typeof THEME_CONFIG,
@@ -24,7 +25,7 @@ export function setRootThemeFromSystemPreference(
   }
 }
 
-export function getWeekDays(workoutDate = new Date()) {
+export function getWeekDays(workoutDate: Date | DateString = new Date()) {
   const weekStart = startOfWeek(workoutDate);
   const weekDays = Array.from({ length: 7 }).map((_, i) =>
     addDays(weekStart, i),
