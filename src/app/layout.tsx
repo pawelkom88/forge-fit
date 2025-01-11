@@ -1,4 +1,4 @@
-import Calendar from "@/components/Calendar.tsx";
+import Calendar from "@/components/calendar/Calendar.tsx";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import { SettingsIcon } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
@@ -14,11 +14,11 @@ export default function App() {
           </div>
           <Button
             size="icon"
-            className="bg-accent focus-visible:bg-yellow-500"
+            className="bg-accent focus-visible:bg-yellow-500 hover:bg-contrast hover:text-contrastReversed transition-colors duration-200"
             variant="outline"
             aria-label="user settings"
           >
-            <SettingsIcon className="h-[1.2rem] w-[1.2rem] text-contrast " />
+            <SettingsIcon className="h-[1.2rem] w-[1.2rem]" />
           </Button>
           <ModeToggle />
         </div>
