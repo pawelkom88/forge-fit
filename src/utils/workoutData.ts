@@ -3,6 +3,7 @@ export interface Workout {
   summary: string;
 }
 
+// TODO: grab data structure from DB structure image/flow chart
 export const workouts: Workout[] = [
   {
     date: new Date(2025, 0, 2),

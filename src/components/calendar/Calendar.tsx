@@ -69,11 +69,10 @@ interface DayButtonProps {
 }
 
 function WorkoutDetailsLink({ date, isWorkoutDay }: DayButtonProps) {
-  console.log(date);
   return (
     <Link
-      to={`${format(date, DATE_PATTERN.YYYY_MM_DD)}`}
-      className={`
+      to={`/workout/${format(date, DATE_PATTERN.YYYY_MM_DD)}`}
+      className={`grid place-items-center
         relative min-h-8 sm:min-h-20 p-1 sm:p-2 rounded-lg text-contrast hover:text-contrastReversed text-center transition-colors duration-200 text-md sm:text-xl hover:bg-contrast hover:shadow focus-visible:bg-yellow-500
         ${isToday(date) ? "bg-teriary text-white font-semibold shadow shadow-teriary" : ""}
         ${isWorkoutDay ? "bg-[#009495] text-white shadow shadow-[#009495]" : ""}

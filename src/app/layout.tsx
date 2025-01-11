@@ -2,8 +2,11 @@ import Calendar from "@/components/calendar/Calendar.tsx";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import { SettingsIcon } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
+import { useLoaderData } from "react-router-dom";
 
 export default function App() {
+  const workouts = useLoaderData();
+  console.log(useLoaderData());
   return (
     <div className="max-w-screen-2xl mx-auto flex h-screen bg-foreground">
       <main className="bg-background flex-1 p-4 sm:p-6 lg:p-8">

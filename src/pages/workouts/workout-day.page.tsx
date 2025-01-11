@@ -11,6 +11,7 @@ import { WeekNavigator } from "@/components/week-navigator.tsx";
 import { WorkoutTracker } from "@/components/workout-tracker.tsx";
 import { NutritionTracker } from "@/components/nutrition-tracker.tsx";
 import { useParams } from "react-router";
+import { useLoaderData } from "react-router-dom";
 
 interface WorkoutDayPageProps {
   params: {
@@ -19,16 +20,19 @@ interface WorkoutDayPageProps {
 }
 
 export default function WorkoutDayPage() {
-  const { workoutDate } = useParams();
+  const data = useLoaderData();
+  console.log(data);
 
-  console.log(workoutDate);
+  const params = useParams();
+
+  console.log(params);
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <h1 className="text-2xl font-bold">
-            {format(workoutDate, "EEEE, MMMM d")}
+            {/*{format(workoutDate, "EEEE, MMMM d")}*/}
           </h1>
           <Button variant="ghost" size="icon">
             <Calendar className="h-5 w-5" />
@@ -36,7 +40,7 @@ export default function WorkoutDayPage() {
         </div>
       </div>
 
-      <WeekNavigator currentDate={workoutDate} />
+      {/*<WeekNavigator currentDate={workoutDate} />*/}
 
       <Tabs defaultValue="workout" className="mt-6">
         <TabsList className="grid w-full grid-cols-2">
