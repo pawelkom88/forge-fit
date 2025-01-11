@@ -4,12 +4,16 @@ module.exports = {
   content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        prompt: "Prompt",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
+        textPrimary: "hsl(var(--text-primary))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         textContrast: "hsl(var(--text-contrast))",

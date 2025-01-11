@@ -3,7 +3,9 @@
 @tailwind utilities;
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --text-primary: 268, 73%, 16%;
+    --background: 32, 100%, 97%;
+    /*--background: 0 0% 100%;*/
     --foreground: 160, 80%, 95%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -35,6 +37,7 @@
     --radius: 0.5rem
   }
   .dark {
+    --text-primary: 0 0% 100%;;
     --foreground: 0 0% 9%;
     --background: 210, 4%, 10%;
     /*--background: 240 10% 3.9%;*/
@@ -71,10 +74,11 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background font-prompt text-textPrimary;
   }
   *:focus-visible {
-    @apply outline-textContrast bg-yellow-500 ring ring-textContrast ;
+    @apply outline-textContrast bg-yellow-500 ring ring-textContrast;
   }
 }
+
 

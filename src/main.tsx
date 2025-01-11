@@ -7,6 +7,7 @@ import {
   ThemeProvider,
   UI_THEME,
 } from "@/components/theme-provider.tsx";
+import "@fontsource/prompt";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

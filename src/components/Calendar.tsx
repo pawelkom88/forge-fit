@@ -19,11 +19,11 @@ export default function Calendar() {
 
   return (
     <section
-      className="bg-foreground rounded-lg p-2 sm:p-4 h-full flex flex-col border"
+      className="bg-foreground rounded-lg p-2 sm:p-4 flex flex-col border"
       aria-labelledby="calendar-label"
       aria-describedby="calendar-description"
     >
-      <div className="flex justify-between items-center mb-4 sm:mb-6">
+      <div className="flex justify-between items-center mb-2">
         <CalendarHeading currentMonth={currentMonth} />
         <div className="flex space-x-2">
           <Button
@@ -55,7 +55,7 @@ export default function Calendar() {
       />
       <WorkoutLegend />
       <hr className="col-span-7" />
-      <ol className="grid grid-cols-7 gap-2 sm:gap-4 flex-grow">
+      <ol className="grid grid-cols-7 gap-2 sm:gap-4">
         <DayOfWeekLabels />
         <hr className="col-span-7" />
         {monthDays.map((day) => {
@@ -98,10 +98,10 @@ function DayButton({
     <button
       onClick={onWorkoutDaySelection}
       className={`
-        relative min-h-12 sm:min-h-20 p-1 sm:p-2 rounded-lg text-center transition-colors duration-200 text-md sm:text-xl hover:bg-red-200 hover:shadow
+        relative min-h-12 sm:min-h-20 p-1 sm:p-2 rounded-lg text-center transition-colors duration-200 text-md sm:text-xl hover:bg-zinc-500 hover:shadow
         ${!isSameMonth(date, currentMonth) ? "text-gray-300" : "text-gray-700"}
-        ${isToday(date) ? "bg-[#007E9E] text-white font-semibold shadow shadow-gray-700" : ""}
-        ${isSameMonth(date, currentMonth) ? "hover:bg-gray-100" : ""}
+        ${isToday(date) ? "bg-[#007095] text-white font-semibold shadow shadow-gray-700" : ""}
+        // ${isSameMonth(date, currentMonth) ? "hover:bg-gray-100" : ""}
         ${isWorkoutDay ? "bg-[#00987d] text-white" : ""}
       `}
     >
@@ -112,7 +112,7 @@ function DayButton({
 
 function WorkoutLegend() {
   return (
-    <dl className="text-black flex gap-2 mb-8">
+    <dl className="text-textPrimary flex gap-2 mb-8">
       <dt>
         <Circle aria-hidden="true" className="text-[#00987d]" />
       </dt>
@@ -129,18 +129,12 @@ function WorkoutLegend() {
 function CalendarHeading({ currentMonth }: { currentMonth: Date }) {
   return (
     <div>
-      <h2 className="sr-only" id="calendar-label">
-        Workout Calendar
+      <h2 aria-hidden="true" className="text-xl sm:text-2xl font-semibold ">
+        {format(currentMonth, "MMMM yyyy")}
       </h2>
       <p className="sr-only" id="calendar-description">
         Choose a day for your workout
       </p>
-      <h2
-        aria-hidden="true"
-        className="text-xl sm:text-2xl font-semibold text-textContrast"
-      >
-        {format(currentMonth, "MMMM yyyy")}
-      </h2>
     </div>
   );
 }
@@ -152,7 +146,7 @@ function DayOfWeekLabels() {
         <abbr
           title={day}
           key={day}
-          className="pt-4 text-center font-bold text-black text-sm sm:text-base no-underline"
+          className="pt-4 text-center font-bold text-textPrimary text-sm sm:text-base no-underline"
         >
           {day.charAt(0)}
         </abbr>
