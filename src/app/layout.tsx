@@ -14,11 +14,11 @@ export default function App() {
           </div>
           <Button
             size="icon"
-            className="bg-accent"
+            className="bg-accent focus-visible:bg-yellow-500"
             variant="outline"
             aria-label="user settings"
           >
-            <SettingsIcon className="h-[1.2rem] w-[1.2rem] text-textContrast" />
+            <SettingsIcon className="h-[1.2rem] w-[1.2rem] text-contrast " />
           </Button>
           <ModeToggle />
         </div>

@@ -26,32 +26,30 @@ export default function Calendar() {
       <div className="flex justify-between items-center mb-2">
         <CalendarHeading currentMonth={currentMonth} />
         <div className="flex space-x-2">
-          <Button
-            variant="outline"
+          <button
             aria-label="Previous month"
             onClick={goToPreviousMonth}
-            className="p-2 rounded-full hover:bg-gray-100 bg-textContrast"
+            className="text-contrastReversed hover:text-contrast p-2 rounded-full hover:bg-background hover:shadow-lg shadow-purple border hover:border hover:border-contrast bg-purple focus-visible:bg-yellow-500"
           >
             <ChevronLeft aria-hidden="true" size={24} />
-          </Button>
-          <Button
-            variant="outline"
+          </button>
+          <button
             aria-label="Next month"
             onClick={goToNextMonth}
-            className="p-2 rounded-full hover:bg-gray-100 bg-textContrast"
+            className="text-contrastReversed hover:text-contrast p-2 rounded-full hover:bg-background hover:shadow-lg shadow-purple border hover:border hover:border-contrast bg-purple focus-visible:bg-yellow-500"
           >
             <ChevronRight aria-hidden="true" size={24} />
-          </Button>
+          </button>
         </div>
       </div>
-      <Label className="text-primary mt-4" htmlFor="workout-date">
+      <Label className="mt-4" htmlFor="workout-date">
         Workout date
       </Label>
       <Input
         id="workout-date"
         type="text"
         placeholder="Enter workout date in YYYY-MM-DD format"
-        className="max-w-96 h-12 p-2 mb-8 "
+        className="max-w-96 h-12 p-2 mb-8 focus-visible:bg-yellow-500 focus-visible:placeholder:text-black"
       />
       <WorkoutLegend />
       <hr className="col-span-7" />
@@ -98,11 +96,9 @@ function DayButton({
     <button
       onClick={onWorkoutDaySelection}
       className={`
-        relative min-h-12 sm:min-h-20 p-1 sm:p-2 rounded-lg text-center transition-colors duration-200 text-md sm:text-xl hover:bg-zinc-500 hover:shadow
-        ${!isSameMonth(date, currentMonth) ? "text-gray-300" : "text-gray-700"}
-        ${isToday(date) ? "bg-[#007095] text-white font-semibold shadow shadow-gray-700" : ""}
-        // ${isSameMonth(date, currentMonth) ? "hover:bg-gray-100" : ""}
-        ${isWorkoutDay ? "bg-[#00987d] text-white" : ""}
+        relative min-h-12 sm:min-h-20 p-1 sm:p-2 rounded-lg text-contrast hover:text-contrastReversed text-center transition-colors duration-200 text-md sm:text-xl hover:bg-contrast hover:shadow focus-visible:bg-yellow-500
+        ${isToday(date) ? "bg-teriary text-white font-semibold shadow shadow-teriary" : ""}
+        ${isWorkoutDay ? "bg-[#00987d] text-white shadow shadow-[#00987d]" : ""}
       `}
     >
       <time dateTime={format(date, "yyyy-MM-dd")}>{format(date, "d")}</time>
@@ -112,14 +108,14 @@ function DayButton({
 
 function WorkoutLegend() {
   return (
-    <dl className="text-textPrimary flex gap-2 mb-8">
+    <dl className="text-purple flex gap-2 mb-8">
       <dt>
         <Circle aria-hidden="true" className="text-[#00987d]" />
       </dt>
       <dd>Past workouts</dd>
       <dd>&#124;</dd>
       <dt>
-        <Circle aria-hidden="true" className="text-[#007E9E]" />
+        <Circle aria-hidden="true" className="text-teriary" />
       </dt>
       <dd>Today's date</dd>
     </dl>
@@ -146,7 +142,7 @@ function DayOfWeekLabels() {
         <abbr
           title={day}
           key={day}
-          className="pt-4 text-center font-bold text-textPrimary text-sm sm:text-base no-underline"
+          className="pt-4 text-center font-bold text-purple text-sm sm:text-base no-underline"
         >
           {day.charAt(0)}
         </abbr>

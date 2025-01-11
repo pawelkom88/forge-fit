@@ -4,6 +4,9 @@ module.exports = {
   content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
     extend: {
+      backgroundImage: {
+        "radial-custom": `radial-gradient(circle at 50% 140%, #e5234433, #0000 50%)`,
+      },
       fontFamily: {
         prompt: "Prompt",
       },
@@ -13,10 +16,11 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
-        textPrimary: "hsl(var(--text-primary))",
+        purple: "hsl(var(--text-primary))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        textContrast: "hsl(var(--text-contrast))",
+        contrast: "hsl(var(--text-contrast))",
+        contrastReversed: "hsl(var(--text-contrast-reversed))",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
@@ -33,6 +37,7 @@ module.exports = {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
+        teriary: "hsl(var(--teriary))",
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
