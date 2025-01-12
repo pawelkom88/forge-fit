@@ -11,5 +11,8 @@ export const DAYS_OF_WEEK = [
 export const DATE_PATTERN = {
   YYYY_MM_DD: "yyyy-MM-dd",
   DAY: "d",
-  THREE_LETTERS: "EEE",
+  ABBR3: "EEE",
+  ABBR4: "EEEE",
+  FULL_MONTH: "MMMM",
+  FULL_MONTH_AND_YEAR: "MMMM yyyy",
 } as const;

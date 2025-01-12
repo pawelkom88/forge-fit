@@ -14,6 +14,7 @@ import { Link, useLoaderData, useParams } from "react-router-dom";
 import { DateString } from "@/utils/ts-helpers.ts";
 import { useTheme } from "@/components/theme-provider.tsx";
 import { RoutesConfig } from "@/routing/routes.tsx";
+import { DATE_PATTERN } from "@/utils/constants.ts";
 
 export default function WorkoutDayPage() {
   const { isLightTheme } = useTheme();
@@ -27,7 +28,10 @@ export default function WorkoutDayPage() {
           <Calendar className="h-5 w-5" />
           <h1 className="text-2xl font-bold">
             {/*// TODO: add to config*/}
-            {format(workoutDate, "EEEE, MMMM d")}
+            {format(
+              workoutDate,
+              `${DATE_PATTERN.ABBR4}, ${DATE_PATTERN.FULL_MONTH} ${DATE_PATTERN.DAY} `,
+            )}
           </h1>
         </div>
         <Link aria-label="Back to calendar" to={`/${RoutesConfig.app.path}`}>
@@ -37,10 +41,14 @@ export default function WorkoutDayPage() {
       <WeekNavigator workoutDate={workoutDate} />
       <Tabs defaultValue="workout" className="mt-6">
         <TabsList
-          className={`grid w-full grid-cols-2 ${isLightTheme ? "bg-purple" : "bg-white"} ${isLightTheme ? "text-white" : "text-black"} `}
+          className={`grid gap-2 w-full grid-cols-2 ${isLightTheme ? "bg-purple" : "bg-white"} ${isLightTheme ? "text-white" : "text-black"}`}
         >
-          <TabsTrigger value="workout">Workout</TabsTrigger>
-          <TabsTrigger value="nutrition">Nutrition</TabsTrigger>
+          <TabsTrigger className="hover:bg-teriary" value="workout">
+            Workout
+          </TabsTrigger>
+          <TabsTrigger className="hover:bg-teriary" value="nutrition">
+            Nutrition
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="workout">
           <WorkoutTracker />

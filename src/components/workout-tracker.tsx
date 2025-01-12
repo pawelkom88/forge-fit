@@ -102,23 +102,27 @@ export function WorkoutTracker() {
   };
 
   return (
-    <div className="space-y-6">
+    <>
+      <h1 className="text-center my-4 text-pretty">
+        You have not added any exercise yet. Click button below to add one.
+      </h1>
       <Dialog>
         <DialogTrigger asChild>
           <Button
-            className={`w-full ${isLightTheme ? "bg-purple" : "bg-white"} ${isLightTheme ? "text-white" : "text-black"} `}
+            className={`w-full ${isLightTheme ? "bg-purple" : "bg-white"} ${isLightTheme ? "text-white" : "text-black"} hover:bg-teriary focus-visible:bg-yellow-500`}
           >
             <Plus className="mr-2 h-4 w-4" />
             Add Exercise
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="max-w-[300px] sm:max-w-[500px] ms-1 me-1">
           <DialogHeader>
             <DialogTitle>Add New Exercise</DialogTitle>
           </DialogHeader>
+
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="muscle-group" className="text-right">
+              <Label htmlFor="muscle-group" className="text-right text-balance">
                 Muscle Group
               </Label>
               <Select
@@ -163,7 +167,12 @@ export function WorkoutTracker() {
               </Select>
             </div>
           </div>
-          <Button onClick={addExercise}>Add Exercise</Button>
+          <Button
+            className={`${isLightTheme ? "bg-purple" : "bg-white"} ${isLightTheme ? "text-white" : "text-black"}`}
+            onClick={addExercise}
+          >
+            Add Exercise
+          </Button>
         </DialogContent>
       </Dialog>
 
@@ -214,7 +223,7 @@ export function WorkoutTracker() {
                 onClick={() => addSet(exercise.id)}
                 variant="outline"
                 size="sm"
-                className="mt-2 text-contrastReversed"
+                className="text-contrastReversed"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Set
@@ -223,6 +232,6 @@ export function WorkoutTracker() {
           </CardContent>
         </Card>
       ))}
-    </div>
+    </>
   );
 }

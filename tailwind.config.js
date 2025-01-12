@@ -38,6 +38,8 @@ module.exports = {
           foreground: "hsl(var(--secondary-foreground))",
         },
         teriary: "hsl(var(--teriary))",
+        quaternary: "hsl(var(--quaternary))",
+        quinary: "hsl(var(--quinary))",
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",

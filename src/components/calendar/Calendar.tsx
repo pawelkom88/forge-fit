@@ -1,4 +1,4 @@
-import { format, isBefore, isSameDay, isToday } from "date-fns";
+import { format, isAfter, isBefore, isSameDay, isToday } from "date-fns";
 import { ChevronLeft, ChevronRight, Circle } from "lucide-react";
 import { useCalendar } from "@/hooks/useCalendar.tsx";
 import { WorkoutDateInput } from "@/components/workout-date-input/WorkoutDateInput.tsx";
@@ -32,7 +32,7 @@ export default function Calendar({ workouts }: Props) {
           <button
             aria-label="Previous month"
             onClick={goToPreviousMonth}
-            className="text-contrastReversed hover:text-contrast p-2 rounded-full hover:bg-background 
+            className="text-contrastReversed hover:text-contrast p-2 rounded-full hover:bg-background
             hover:shadow-lg shadow-purple border hover:border hover:border-contrast bg-purple focus-visible:bg-yellow-500"
           >
             <ChevronLeft aria-hidden="true" size={24} />
@@ -40,7 +40,7 @@ export default function Calendar({ workouts }: Props) {
           <button
             aria-label="Next month"
             onClick={goToNextMonth}
-            className="text-contrastReversed hover:text-contrast p-2 rounded-full hover:bg-background 
+            className="text-contrastReversed hover:text-contrast p-2 rounded-full hover:bg-background
             hover:shadow-lg shadow-purple border hover:border hover:border-contrast bg-purple focus-visible:bg-yellow-500"
           >
             <ChevronRight aria-hidden="true" size={24} />
@@ -56,17 +56,19 @@ export default function Calendar({ workouts }: Props) {
         <hr className="col-span-7" />
         <EmptyCells startDay={startDay} />
         {monthDays.map((day) => {
-          const isWorkoutDay = workouts.some((workout) =>
-            isSameDay(workout.date, day),
+          const today = new Date();
+          const isWorkoutDay = workouts.some(({ date }) =>
+            isSameDay(date, day),
           );
 
-          const isPastWorkout = isBefore(day, new Date()) && isWorkoutDay;
+          const isFutureWorkout = isAfter(day, today) && isWorkoutDay;
+          const isPastWorkout = isBefore(day, today) && isWorkoutDay;
 
           return (
             <WorkoutDetailsLink
               key={day.toISOString()}
-              isWorkoutDay={isWorkoutDay}
-              date={day}
+              workoutDate={day}
+              isFutureWorkout={isFutureWorkout}
               isPastWorkout={isPastWorkout}
             />
           );
@@ -77,28 +79,28 @@ export default function Calendar({ workouts }: Props) {
 }
 
 interface DayButtonProps {
-  date: Date;
-  isWorkoutDay: boolean;
+  workoutDate: Date;
   isPastWorkout: boolean;
+  isFutureWorkout: boolean;
 }
 
 function WorkoutDetailsLink({
-  date,
-  isWorkoutDay,
+  workoutDate,
   isPastWorkout,
+  isFutureWorkout,
 }: DayButtonProps) {
   return (
     <Link
-      to={`/workout/${format(date, DATE_PATTERN.YYYY_MM_DD)}`}
+      to={`/workout/${format(workoutDate, DATE_PATTERN.YYYY_MM_DD)}`}
       className={`grid place-items-center
         relative min-h-8 sm:min-h-20 p-1 sm:p-2 rounded-lg text-contrast hover:text-contrastReversed text-center transition-colors duration-200 text-md sm:text-xl hover:bg-contrast hover:shadow focus-visible:bg-yellow-500
-        ${isToday(date) ? "bg-teriary text-white font-semibold shadow shadow-teriary" : ""}
-        ${isWorkoutDay ? "bg-[#009495] text-white shadow shadow-[#009495]" : ""}
-        ${isPastWorkout ? "bg-orange-400 text-white shadow shadow-[#009495]" : ""}
+        ${isToday(workoutDate) ? "bg-teriary text-white font-bold shadow shadow-teriary" : ""}
+        ${isPastWorkout ? "bg-quaternary text-white shadow shadow-quaternary" : ""}
+        ${isFutureWorkout ? "bg-quinary text-black shadow shadow-quinary" : ""}
       `}
     >
-      <time dateTime={format(date, DATE_PATTERN.YYYY_MM_DD)}>
-        {format(date, DATE_PATTERN.DAY)}
+      <time dateTime={format(workoutDate, DATE_PATTERN.YYYY_MM_DD)}>
+        {format(workoutDate, DATE_PATTERN.DAY)}
       </time>
     </Link>
   );
@@ -108,18 +110,17 @@ function WorkoutLegend() {
   return (
     <dl className="text-purple flex gap-2 mb-8">
       <dt>
-        <Circle aria-hidden="true" className="text-[#009495]" />
+        <Circle strokeWidth={1} fill="hsl(180, 100%, 29%)" aria-hidden="true" />
       </dt>
       <dd>Past workouts</dd>
       <dd>&#124;</dd>
       <dt>
-        <Circle aria-hidden="true" className="text-teriary" />
+        <Circle strokeWidth={1} fill="hsl(348, 66%, 50%)" aria-hidden="true" />
       </dt>
       <dd>Today's date</dd>
       <dd>&#124;</dd>
       <dt>
-        {/*// TODO: find best color* - full circles ?/}
-        <Circle aria-hidden="true" className="text-pink-800" />
+        <Circle strokeWidth={1} fill="hsl(53, 98%, 77%)" aria-hidden="true" />
       </dt>
       <dd>Future workouts</dd>
     </dl>
@@ -130,7 +131,7 @@ function CalendarHeading({ currentMonth }: { currentMonth: Date }) {
   return (
     <div>
       <h2 aria-hidden="true" className="text-xl sm:text-2xl font-semibold ">
-        {format(currentMonth, "MMMM yyyy")}
+        {format(currentMonth, DATE_PATTERN.FULL_MONTH_AND_YEAR)}
       </h2>
       <p className="sr-only" id="calendar-description">
         Choose a day for your workout
@@ -149,7 +150,7 @@ function DayOfWeekLabels() {
             key={day.toISOString()}
             className="pt-4 text-center font-bold text-purple text-sm sm:text-base no-underline"
           >
-            {format(day, DATE_PATTERN.THREE_LETTERS)}
+            {format(day, DATE_PATTERN.ABBR3)}
           </abbr>
         );
       })}

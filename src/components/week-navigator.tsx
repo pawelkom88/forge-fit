@@ -23,8 +23,8 @@ export function WeekNavigator({ workoutDate }: Props) {
       <div className="grid grid-cols-7 gap-2 text-center">
         {getWeekDays(workoutDate).map((day) => {
           const isToday =
-            format(day, DATE_PATTERN.THREE_LETTERS) ===
-            format(workoutDate, DATE_PATTERN.THREE_LETTERS);
+            format(day, DATE_PATTERN.ABBR3) ===
+            format(workoutDate, DATE_PATTERN.ABBR3);
 
           return (
             <Link
@@ -37,7 +37,7 @@ export function WeekNavigator({ workoutDate }: Props) {
               <div
                 className={`text-sm ${isToday ? "text-contrastReversed" : "text-contrast"}`}
               >
-                {format(day, DATE_PATTERN.THREE_LETTERS)}
+                {format(day, DATE_PATTERN.ABBR3)}
               </div>
               <div
                 className={`text-lg ${isToday ? "text-contrastReversed text-xl" : "text-contrast"}`}
