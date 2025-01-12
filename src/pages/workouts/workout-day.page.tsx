@@ -1,5 +1,5 @@
 import { format, parseISO } from "date-fns";
-import { Calendar } from "lucide-react";
+import { ArrowLeftCircle, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Tabs,
@@ -10,9 +10,10 @@ import {
 import { WeekNavigator } from "@/components/week-navigator.tsx";
 import { WorkoutTracker } from "@/components/workout-tracker.tsx";
 import { NutritionTracker } from "@/components/nutrition-tracker.tsx";
-import { useLoaderData, useParams } from "react-router-dom";
+import { Link, useLoaderData, useParams } from "react-router-dom";
 import { DateString } from "@/utils/ts-helpers.ts";
 import { useTheme } from "@/components/theme-provider.tsx";
+import { RoutesConfig } from "@/routing/routes.tsx";
 
 export default function WorkoutDayPage() {
   const { isLightTheme } = useTheme();
@@ -20,7 +21,7 @@ export default function WorkoutDayPage() {
   const { workoutDate } = useParams() as { workoutDate: DateString };
 
   return (
-    <section className="bg-background container mx-auto p-4 max-w-4xl">
+    <section className="bg-background container mx-auto pt-6  px-4 max-w-4xl">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <Calendar className="h-5 w-5" />
@@ -29,6 +30,9 @@ export default function WorkoutDayPage() {
             {format(workoutDate, "EEEE, MMMM d")}
           </h1>
         </div>
+        <Link aria-label="Back to calendar" to={`/${RoutesConfig.app.path}`}>
+          <ArrowLeftCircle size="30" aria-hidden="true" />
+        </Link>
       </div>
       <WeekNavigator workoutDate={workoutDate} />
       <Tabs defaultValue="workout" className="mt-6">

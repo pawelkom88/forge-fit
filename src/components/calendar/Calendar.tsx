@@ -1,4 +1,4 @@
-import { format, isSameDay, isToday } from "date-fns";
+import { format, isBefore, isSameDay, isToday } from "date-fns";
 import { ChevronLeft, ChevronRight, Circle } from "lucide-react";
 import { useCalendar } from "@/hooks/useCalendar.tsx";
 import { WorkoutDateInput } from "@/components/workout-date-input/WorkoutDateInput.tsx";
@@ -59,11 +59,15 @@ export default function Calendar({ workouts }: Props) {
           const isWorkoutDay = workouts.some((workout) =>
             isSameDay(workout.date, day),
           );
+
+          const isPastWorkout = isBefore(day, new Date()) && isWorkoutDay;
+
           return (
             <WorkoutDetailsLink
               key={day.toISOString()}
               isWorkoutDay={isWorkoutDay}
               date={day}
+              isPastWorkout={isPastWorkout}
             />
           );
         })}
@@ -75,9 +79,14 @@ export default function Calendar({ workouts }: Props) {
 interface DayButtonProps {
   date: Date;
   isWorkoutDay: boolean;
+  isPastWorkout: boolean;
 }
 
-function WorkoutDetailsLink({ date, isWorkoutDay }: DayButtonProps) {
+function WorkoutDetailsLink({
+  date,
+  isWorkoutDay,
+  isPastWorkout,
+}: DayButtonProps) {
   return (
     <Link
       to={`/workout/${format(date, DATE_PATTERN.YYYY_MM_DD)}`}
@@ -85,6 +94,7 @@ function WorkoutDetailsLink({ date, isWorkoutDay }: DayButtonProps) {
         relative min-h-8 sm:min-h-20 p-1 sm:p-2 rounded-lg text-contrast hover:text-contrastReversed text-center transition-colors duration-200 text-md sm:text-xl hover:bg-contrast hover:shadow focus-visible:bg-yellow-500
         ${isToday(date) ? "bg-teriary text-white font-semibold shadow shadow-teriary" : ""}
         ${isWorkoutDay ? "bg-[#009495] text-white shadow shadow-[#009495]" : ""}
+        ${isPastWorkout ? "bg-orange-400 text-white shadow shadow-[#009495]" : ""}
       `}
     >
       <time dateTime={format(date, DATE_PATTERN.YYYY_MM_DD)}>
@@ -106,6 +116,12 @@ function WorkoutLegend() {
         <Circle aria-hidden="true" className="text-teriary" />
       </dt>
       <dd>Today's date</dd>
+      <dd>&#124;</dd>
+      <dt>
+        {/*// TODO: find best color* - full circles ?/}
+        <Circle aria-hidden="true" className="text-pink-800" />
+      </dt>
+      <dd>Future workouts</dd>
     </dl>
   );
 }

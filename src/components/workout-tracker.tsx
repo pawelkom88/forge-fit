@@ -37,6 +37,8 @@ const commonExercises: { [key: string]: string[] } = {
 export function WorkoutTracker() {
   const { isLightTheme } = useTheme();
 
+  // fetch - pass all details regarding this workout
+
   const [workout, setWorkout] = useState<Workout>({
     id: "1",
     date: new Date(),
