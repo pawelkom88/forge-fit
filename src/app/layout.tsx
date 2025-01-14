@@ -3,9 +3,10 @@ import { ModeToggle } from "@/components/mode-toggle.tsx";
 import { SettingsIcon } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { useLoaderData } from "react-router-dom";
+import { Workout } from "@/utils/workoutData.ts";
 
 export default function App() {
-  const workouts = useLoaderData();
+  const workouts = useLoaderData() as Workout[];
   return (
     <div className="max-w-screen-2xl mx-auto flex h-screen bg-foreground">
       <main className="bg-background flex-1 p-4 sm:p-6 lg:p-8">

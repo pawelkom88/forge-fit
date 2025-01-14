@@ -14,10 +14,19 @@ export interface Exercise {
 export interface Workout {
   workoutId: string;
   userId: string;
-  date: string;
+  date: Date;
   notes: string;
   exercises: Exercise[];
 }
+
+export const commonExercises: { [key: string]: string[] } = {
+  Chest: ["Bench Press", "Push-ups", "Chest Flyes"],
+  Back: ["Pull-ups", "Rows", "Lat Pulldowns"],
+  Legs: ["Squats", "Lunges", "Leg Press"],
+  Shoulders: ["Overhead Press", "Lateral Raises", "Front Raises"],
+  Arms: ["Bicep Curls", "Tricep Extensions", "Hammer Curls"],
+  Core: ["Crunches", "Planks", "Russian Twists"],
+};
 
 // TODO: grab data structure from DB structure image/flow chart
 export const workouts = [

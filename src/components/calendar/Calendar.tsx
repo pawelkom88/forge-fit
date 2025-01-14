@@ -50,7 +50,6 @@ export default function Calendar({ workouts }: Props) {
       <WorkoutDateInput />
       <WorkoutLegend />
       <hr className="col-span-7" />
-      {/*// TODO: start month from the correct day, in january example it is wednesday so need to create empty cells*/}
       <ol className="grid grid-cols-7 gap-4">
         <DayOfWeekLabels />
         <hr className="col-span-7" />

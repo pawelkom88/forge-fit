@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, X } from "lucide-react";
+import { Plus, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,39 +20,30 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Exercise, Workout } from "@/types/workout";
+
 import { useTheme } from "@/components/theme-provider.tsx";
+import { commonExercises, Exercise, Workout } from "@/utils/workoutData.ts";
 
 const muscleGroups = ["Chest", "Back", "Legs", "Shoulders", "Arms", "Core"];
 
-const commonExercises: { [key: string]: string[] } = {
-  Chest: ["Bench Press", "Push-ups", "Chest Flyes"],
-  Back: ["Pull-ups", "Rows", "Lat Pulldowns"],
-  Legs: ["Squats", "Lunges", "Leg Press"],
-  Shoulders: ["Overhead Press", "Lateral Raises", "Front Raises"],
-  Arms: ["Bicep Curls", "Tricep Extensions", "Hammer Curls"],
-  Core: ["Crunches", "Planks", "Russian Twists"],
-};
+interface Props {
+  workout1: Workout;
+}
 
-export function WorkoutTracker() {
+export function WorkoutTracker({ workout1 }): Props {
   const { isLightTheme } = useTheme();
 
   // fetch - pass all details regarding this workout
 
-  const [workout, setWorkout] = useState<Workout>({
-    id: "1",
-    date: new Date(),
-    exercises: [],
-  });
+  const [workout, setWorkout] = useState<Workout>(workout1 ?? []);
   const [newExercise, setNewExercise] = useState<Exercise>({
-    id: "",
-    name: "",
+    exerciseId: "",
     muscleGroup: "",
-    sets: [{ weight: 0, reps: 0 }],
+    sets: [{ setId: "set1", weight: 0, reps: 0, setOrder: 0 }],
   });
 
   const addExercise = () => {
-    if (newExercise.name && newExercise.muscleGroup) {
+    if (newExercise.exerciseId && newExercise.muscleGroup) {
       setWorkout((prev) => ({
         ...prev,
         exercises: [
@@ -61,10 +52,9 @@ export function WorkoutTracker() {
         ],
       }));
       setNewExercise({
-        id: "",
-        name: "",
+        exerciseId: "",
         muscleGroup: "",
-        sets: [{ weight: 0, reps: 0 }],
+        sets: [{ setId: "set1", weight: 0, reps: 0, setOrder: 0 }],
       });
     }
   };
@@ -73,7 +63,7 @@ export function WorkoutTracker() {
     setWorkout((prev) => ({
       ...prev,
       exercises: prev.exercises.map((ex) =>
-        ex.id === exerciseId
+        ex.exerciseId === exerciseId
           ? { ...ex, sets: [...ex.sets, { weight: 0, reps: 0 }] }
           : ex,
       ),
@@ -89,7 +79,7 @@ export function WorkoutTracker() {
     setWorkout((prev) => ({
       ...prev,
       exercises: prev.exercises.map((ex) =>
-        ex.id === exerciseId
+        ex.exerciseId === exerciseId
           ? {
               ...ex,
               sets: ex.sets.map((set, idx) =>
@@ -103,13 +93,84 @@ export function WorkoutTracker() {
 
   return (
     <>
-      <h1 className="text-center my-4 text-pretty">
-        You have not added any exercise yet. Click button below to add one.
-      </h1>
+      {!workout1?.exercises.length ? (
+        <h1 className="text-center my-4 text-pretty">
+          You have not added any exercise yet. Click button below to add one.
+        </h1>
+      ) : (
+        <div>I have some</div>
+      )}
+      {/*TODO: separate component / idealy exercise name and accordion that closes automatically when other opens*/}
+      {workout.exercises.map((exercise) => (
+        <Card className="my-2" key={exercise.exerciseId}>
+          <CardHeader>
+            <CardTitle>{exercise.exerciseId}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {exercise.sets.map((set, setIndex) => (
+                <div
+                  key={setIndex}
+                  className="grid grid-cols-[1fr_1fr_1fr_auto_auto] items-center gap-2 w-fit"
+                  // className="flex items-center space-x-2 border-4"
+                >
+                  <Input
+                    type="number"
+                    value={set.weight}
+                    onChange={(e) =>
+                      updateSet(
+                        exercise.exerciseId,
+                        setIndex,
+                        "weight",
+                        Number(e.target.value),
+                      )
+                    }
+                    placeholder="Weight"
+                    className="w-20"
+                  />
+                  <span>×</span>
+                  <Input
+                    type="number"
+                    value={set.reps}
+                    onChange={(e) =>
+                      updateSet(
+                        exercise.exerciseId,
+                        setIndex,
+                        "reps",
+                        Number(e.target.value),
+                      )
+                    }
+                    placeholder="Reps"
+                    className="w-20"
+                  />
+                  <span className="text-sm text-gray-500">
+                    Set {setIndex + 1}
+                  </span>
+                  <button aria-label={`delete set ${setIndex + 1}`}>
+                    <Trash2
+                      aria-hidden="true"
+                      className="h-6 w-6 justify-self-end"
+                    />
+                  </button>
+                </div>
+              ))}
+              <Button
+                onClick={() => addSet(exercise.exerciseId)}
+                variant="outline"
+                size="sm"
+                className={`${isLightTheme ? "bg-purple" : "bg-white"} ${isLightTheme ? "text-white" : "text-black"} hover:bg-black hover:text-white focus-visible:bg-yellow-500{`}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add Set
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
       <Dialog>
         <DialogTrigger asChild>
           <Button
-            className={`w-full ${isLightTheme ? "bg-purple" : "bg-white"} ${isLightTheme ? "text-white" : "text-black"} hover:bg-teriary focus-visible:bg-yellow-500`}
+            className={`w-full bg-teriary text-white hover:bg-black focus-visible:bg-yellow-500`}
           >
             <Plus className="mr-2 h-4 w-4" />
             Add Exercise
@@ -175,63 +236,6 @@ export function WorkoutTracker() {
           </Button>
         </DialogContent>
       </Dialog>
-
-      {workout.exercises.map((exercise) => (
-        <Card key={exercise.id}>
-          <CardHeader>
-            <CardTitle>{exercise.name}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {exercise.sets.map((set, setIndex) => (
-                <div key={setIndex} className="flex items-center space-x-2">
-                  <Input
-                    type="number"
-                    value={set.weight}
-                    onChange={(e) =>
-                      updateSet(
-                        exercise.id,
-                        setIndex,
-                        "weight",
-                        Number(e.target.value),
-                      )
-                    }
-                    placeholder="Weight"
-                    className="w-20"
-                  />
-                  <span>×</span>
-                  <Input
-                    type="number"
-                    value={set.reps}
-                    onChange={(e) =>
-                      updateSet(
-                        exercise.id,
-                        setIndex,
-                        "reps",
-                        Number(e.target.value),
-                      )
-                    }
-                    placeholder="Reps"
-                    className="w-20"
-                  />
-                  <span className="text-sm text-gray-500">
-                    Set {setIndex + 1}
-                  </span>
-                </div>
-              ))}
-              <Button
-                onClick={() => addSet(exercise.id)}
-                variant="outline"
-                size="sm"
-                className="text-contrastReversed"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add Set
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
     </>
   );
 }

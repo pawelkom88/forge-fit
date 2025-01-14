@@ -1,6 +1,5 @@
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import { ArrowLeftCircle, Calendar } from "lucide-react";
-import { Button } from "@/components/ui/button.tsx";
 import {
   Tabs,
   TabsContent,
@@ -15,10 +14,11 @@ import { DateString } from "@/utils/ts-helpers.ts";
 import { useTheme } from "@/components/theme-provider.tsx";
 import { RoutesConfig } from "@/routing/routes.tsx";
 import { DATE_PATTERN } from "@/utils/constants.ts";
+import type { Workout } from "@/utils/workoutData.ts";
 
 export default function WorkoutDayPage() {
   const { isLightTheme } = useTheme();
-  const data = useLoaderData();
+  const workout = useLoaderData() as Workout;
   const { workoutDate } = useParams() as { workoutDate: DateString };
 
   return (
@@ -51,7 +51,7 @@ export default function WorkoutDayPage() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="workout">
-          <WorkoutTracker />
+          <WorkoutTracker workout1={workout} />
         </TabsContent>
         <TabsContent value="nutrition">
           <NutritionTracker />
