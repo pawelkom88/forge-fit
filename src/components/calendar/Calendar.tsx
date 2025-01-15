@@ -20,12 +20,10 @@ export default function Calendar({ workouts }: Props) {
     goToNextMonth,
   } = useCalendar();
 
+  // preserve focus - for example if user clicked on 5th and then went back to calendar, focus should be on 5th again
+
   return (
-    <section
-      className="bg-foreground rounded-lg p-2 sm:p-4 flex flex-col border"
-      aria-labelledby="calendar-label"
-      aria-describedby="calendar-description"
-    >
+    <section className="bg-foreground rounded-lg p-2 sm:p-4 flex flex-col border">
       <div className="flex justify-between items-center mb-2">
         <CalendarHeading currentMonth={currentMonth} />
         <div className="flex space-x-2">
@@ -88,8 +86,26 @@ function WorkoutDetailsLink({
   isPastWorkout,
   isFutureWorkout,
 }: DayButtonProps) {
+  // move to utils - use accross components
+
+  const defaultOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  } as const;
+
+  const formatDateForScreenReader = (
+    date: Date,
+    language = "en-GB",
+    options = defaultOptions,
+  ) => {
+    return new Intl.DateTimeFormat(language, options).format(date);
+  };
+
   return (
     <Link
+      aria-label={`${isPastWorkout || isFutureWorkout ? `Workout details for ${formatDateForScreenReader(workoutDate)} : ""` : `Enter to add workout for ${formatDateForScreenReader(workoutDate)}`}`}
+      // aria-describedby="isToday isWorkoutDay"
       to={`/workout/${format(workoutDate, DATE_PATTERN.YYYY_MM_DD)}`}
       className={`grid place-items-center
         relative min-h-8 sm:min-h-20 p-1 sm:p-2 rounded-lg text-contrast hover:text-contrastReversed text-center transition-colors duration-200 text-md sm:text-xl hover:bg-contrast hover:shadow focus-visible:bg-yellow-500
@@ -101,6 +117,12 @@ function WorkoutDetailsLink({
       <time dateTime={format(workoutDate, DATE_PATTERN.YYYY_MM_DD)}>
         {format(workoutDate, DATE_PATTERN.DAY)}
       </time>
+      {/*<p className="sr-only" id="isToday">*/}
+      {/*  {isToday(workoutDate) ? "Today's date" : ""}*/}
+      {/*</p>*/}
+      {/*<p className="sr-only" id="isWorkoutDay">*/}
+      {/*  {isPastWorkout || isFutureWorkout ? "workout day" : ""}*/}
+      {/*</p>*/}
     </Link>
   );
 }
@@ -129,11 +151,14 @@ function WorkoutLegend() {
 function CalendarHeading({ currentMonth }: { currentMonth: Date }) {
   return (
     <div>
-      <h2 aria-hidden="true" className="text-xl sm:text-2xl font-semibold ">
+      <h2
+        aria-describedby="current-month"
+        className="text-xl sm:text-2xl font-semibold "
+      >
         {format(currentMonth, DATE_PATTERN.FULL_MONTH_AND_YEAR)}
       </h2>
-      <p className="sr-only" id="calendar-description">
-        Choose a day for your workout
+      <p className="sr-only" id="current-month">
+        is the current chosen month, use buttons to navigate to other months
       </p>
     </div>
   );
