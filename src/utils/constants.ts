@@ -16,3 +16,12 @@ export const DATE_PATTERN = {
   FULL_MONTH: "MMMM",
   FULL_MONTH_AND_YEAR: "MMMM yyyy",
 } as const;
+
+export const muscleGroups = [
+  "Chest",
+  "Back",
+  "Legs",
+  "Shoulders",
+  "Arms",
+  "Core",
+];

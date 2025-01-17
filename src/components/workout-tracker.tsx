@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Plus, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,22 +18,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { useTheme } from "@/components/theme-provider.tsx";
 import { commonExercises, Exercise, Workout } from "@/utils/workoutData.ts";
-
-const muscleGroups = ["Chest", "Back", "Legs", "Shoulders", "Arms", "Core"];
+import { muscleGroups } from "@/utils/constants.ts";
 
 interface Props {
-  workout1: Workout;
+  workoutDetails: Workout;
 }
 
-export function WorkoutTracker({ workout1 }): Props {
+export function WorkoutTracker({ workoutDetails }): JSX.Element {
   const { isLightTheme } = useTheme();
 
   // fetch - pass all details regarding this workout
-
-  const [workout, setWorkout] = useState<Workout>(workout1 ?? []);
+  const [workout, setWorkout] = useState<Workout>(workoutDetails ?? []);
   const [newExercise, setNewExercise] = useState<Exercise>({
     exerciseId: "",
     muscleGroup: "",
@@ -90,83 +85,87 @@ export function WorkoutTracker({ workout1 }): Props {
       ),
     }));
   };
+  {
+    /*TODO: separate component / idealy exercise name and accordion that closes automatically when other opens*/
+  }
 
   return (
     <>
-      {!workout1?.exercises.length ? (
+      {!workout?.exercises?.length ? (
         <h1 className="text-center my-4 text-pretty">
           You have not added any exercise yet. Click button below to add one.
         </h1>
       ) : (
-        <div>I have some</div>
-      )}
-      {/*TODO: separate component / idealy exercise name and accordion that closes automatically when other opens*/}
-      {workout.exercises.map((exercise) => (
-        <Card className="my-2" key={exercise.exerciseId}>
-          <CardHeader>
-            <CardTitle>{exercise.exerciseId}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {exercise.sets.map((set, setIndex) => (
-                <div
-                  key={setIndex}
-                  className="grid grid-cols-[1fr_1fr_1fr_auto_auto] items-center gap-2 w-fit"
-                  // className="flex items-center space-x-2 border-4"
-                >
-                  <Input
-                    type="number"
-                    value={set.weight}
-                    onChange={(e) =>
-                      updateSet(
-                        exercise.exerciseId,
-                        setIndex,
-                        "weight",
-                        Number(e.target.value),
-                      )
-                    }
-                    placeholder="Weight"
-                    className="w-20"
-                  />
-                  <span>×</span>
-                  <Input
-                    type="number"
-                    value={set.reps}
-                    onChange={(e) =>
-                      updateSet(
-                        exercise.exerciseId,
-                        setIndex,
-                        "reps",
-                        Number(e.target.value),
-                      )
-                    }
-                    placeholder="Reps"
-                    className="w-20"
-                  />
-                  <span className="text-sm text-gray-500">
-                    Set {setIndex + 1}
-                  </span>
-                  <button aria-label={`delete set ${setIndex + 1}`}>
-                    <Trash2
-                      aria-hidden="true"
-                      className="h-6 w-6 justify-self-end"
-                    />
-                  </button>
+        <>
+          {workout.exercises?.map((exercise) => (
+            <Card className="my-2" key={exercise.exerciseId}>
+              <CardHeader>
+                <CardTitle>{exercise.exerciseId}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {exercise.sets.map((set, setIndex) => (
+                    <div
+                      key={setIndex}
+                      className="grid grid-cols-[1fr_1fr_1fr_auto_auto] items-center gap-2 w-fit"
+                    >
+                      <Input
+                        type="number"
+                        value={set.weight}
+                        onChange={(e) =>
+                          updateSet(
+                            exercise.exerciseId,
+                            setIndex,
+                            "weight",
+                            Number(e.target.value),
+                          )
+                        }
+                        placeholder="Weight"
+                        className="w-20"
+                      />
+                      <span>×</span>
+                      <Input
+                        type="number"
+                        value={set.reps}
+                        onChange={(e) =>
+                          updateSet(
+                            exercise.exerciseId,
+                            setIndex,
+                            "reps",
+                            Number(e.target.value),
+                          )
+                        }
+                        placeholder="Reps"
+                        className="w-20"
+                      />
+                      <span className="text-sm text-gray-500">
+                        Set {setIndex + 1}
+                      </span>
+                      <button aria-label={`delete set ${setIndex + 1}`}>
+                        <Trash2
+                          aria-hidden="true"
+                          className="h-6 w-6 justify-self-end"
+                        />
+                      </button>
+                    </div>
+                  ))}
+                  <Button
+                    onClick={() => addSet(exercise.exerciseId)}
+                    variant="outline"
+                    size="sm"
+                    className={`${
+                      isLightTheme ? "bg-purple" : "bg-white"
+                    } ${isLightTheme ? "text-white" : "text-black"} hover:bg-black hover:text-white focus-visible:bg-yellow-500`}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Set
+                  </Button>
                 </div>
-              ))}
-              <Button
-                onClick={() => addSet(exercise.exerciseId)}
-                variant="outline"
-                size="sm"
-                className={`${isLightTheme ? "bg-purple" : "bg-white"} ${isLightTheme ? "text-white" : "text-black"} hover:bg-black hover:text-white focus-visible:bg-yellow-500{`}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add Set
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+              </CardContent>
+            </Card>
+          ))}
+        </>
+      )}
       <Dialog>
         <DialogTrigger asChild>
           <Button
@@ -229,7 +228,9 @@ export function WorkoutTracker({ workout1 }): Props {
             </div>
           </div>
           <Button
-            className={`${isLightTheme ? "bg-purple" : "bg-white"} ${isLightTheme ? "text-white" : "text-black"}`}
+            className={`${
+              isLightTheme ? "bg-purple" : "bg-white"
+            } ${isLightTheme ? "text-white" : "text-black"}`}
             onClick={addExercise}
           >
             Add Exercise

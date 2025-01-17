@@ -23,6 +23,10 @@ export default function WorkoutDayPage() {
   const { workoutDate } = useParams() as { workoutDate: DateString };
   const headingRef = useRef<HTMLHeadingElement>(null);
 
+  useEffect(() => {
+    localStorage.setItem("workoutDate", workoutDate);
+  }, [workoutDate]);
+
   // TODO: add skip to main content - id already set to workout
 
   useEffect(() => {
@@ -64,7 +68,7 @@ export default function WorkoutDayPage() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="workout">
-          <WorkoutTracker workout1={workout} />
+          <WorkoutTracker workoutDetails={workout} />
         </TabsContent>
         <TabsContent value="nutrition">
           <NutritionTracker />

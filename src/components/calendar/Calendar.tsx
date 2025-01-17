@@ -4,8 +4,9 @@ import { useCalendar } from "@/hooks/useCalendar.tsx";
 import { WorkoutDateInput } from "@/components/workout-date-input/WorkoutDateInput.tsx";
 import { Link } from "react-router-dom";
 import { Workout } from "@/utils/workoutData.ts";
-import { getWeekDays } from "@/utils/helpers.ts";
+import { formatDateForScreenReader, getWeekDays } from "@/utils/helpers.ts";
 import { DATE_PATTERN } from "@/utils/constants.ts";
+import { useEffect, useRef } from "react";
 
 interface Props {
   workouts: Workout[];
@@ -19,8 +20,6 @@ export default function Calendar({ workouts }: Props) {
     goToPreviousMonth,
     goToNextMonth,
   } = useCalendar();
-
-  // preserve focus - for example if user clicked on 5th and then went back to calendar, focus should be on 5th again
 
   return (
     <section className="bg-foreground rounded-lg p-2 sm:p-4 flex flex-col border">
@@ -86,27 +85,25 @@ function WorkoutDetailsLink({
   isPastWorkout,
   isFutureWorkout,
 }: DayButtonProps) {
-  // move to utils - use accross components
+  const linkRef = useRef(null);
+  const formatedDate = format(workoutDate, DATE_PATTERN.YYYY_MM_DD);
+  const formatedDateForScreenReaders = formatDateForScreenReader(workoutDate);
 
-  const defaultOptions = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  } as const;
+  useEffect(() => {
+    const savedDate = localStorage.getItem("workoutDate");
 
-  const formatDateForScreenReader = (
-    date: Date,
-    language = "en-GB",
-    options = defaultOptions,
-  ) => {
-    return new Intl.DateTimeFormat(language, options).format(date);
-  };
+    if (savedDate && linkRef.current) {
+      const linkElement = document.querySelector(`[data-date="${savedDate}"]`);
+      linkElement?.focus();
+    }
+  }, []);
 
   return (
     <Link
-      aria-label={`${isPastWorkout || isFutureWorkout ? `Workout details for ${formatDateForScreenReader(workoutDate)} : ""` : `Enter to add workout for ${formatDateForScreenReader(workoutDate)}`}`}
-      // aria-describedby="isToday isWorkoutDay"
-      to={`/workout/${format(workoutDate, DATE_PATTERN.YYYY_MM_DD)}`}
+      data-date={formatedDate}
+      ref={linkRef}
+      aria-label={`${isPastWorkout || isFutureWorkout ? `Workout details for ${formatedDateForScreenReaders} : ""` : `Enter to add workout for ${formatedDateForScreenReaders}`}`}
+      to={`/workout/${formatedDate}`}
       className={`grid place-items-center
         relative min-h-8 sm:min-h-20 p-1 sm:p-2 rounded-lg text-contrast hover:text-contrastReversed text-center transition-colors duration-200 text-md sm:text-xl hover:bg-contrast hover:shadow focus-visible:bg-yellow-500
         ${isToday(workoutDate) ? "bg-teriary text-white font-bold shadow shadow-teriary" : ""}
@@ -114,15 +111,9 @@ function WorkoutDetailsLink({
         ${isFutureWorkout ? "bg-quinary text-black shadow shadow-quinary" : ""}
       `}
     >
-      <time dateTime={format(workoutDate, DATE_PATTERN.YYYY_MM_DD)}>
+      <time dateTime={formatedDate}>
         {format(workoutDate, DATE_PATTERN.DAY)}
       </time>
-      {/*<p className="sr-only" id="isToday">*/}
-      {/*  {isToday(workoutDate) ? "Today's date" : ""}*/}
-      {/*</p>*/}
-      {/*<p className="sr-only" id="isWorkoutDay">*/}
-      {/*  {isPastWorkout || isFutureWorkout ? "workout day" : ""}*/}
-      {/*</p>*/}
     </Link>
   );
 }
