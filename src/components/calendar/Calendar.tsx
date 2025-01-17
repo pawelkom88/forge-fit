@@ -52,6 +52,7 @@ export default function Calendar({ workouts }: Props) {
         <hr className="col-span-7" />
         <EmptyCells startDay={startDay} />
         {monthDays.map((day) => {
+          // used n two place - consider creating a hook
           const today = new Date();
           const isWorkoutDay = workouts.some(({ date }) =>
             isSameDay(date, day),

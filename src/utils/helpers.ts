@@ -1,6 +1,7 @@
 import { Theme, THEME_CONFIG } from "@/components/theme-provider.tsx";
-import { addDays, startOfWeek, subDays } from "date-fns";
+import { isSameDay, addDays, startOfWeek, subDays } from "date-fns";
 import { DateString } from "@/utils/ts-helpers.ts";
+import { Workout } from "@/utils/workoutData.ts";
 
 export function removeThemeClasses(
   themes: typeof THEME_CONFIG,
@@ -48,8 +49,20 @@ export function formatDateForScreenReader(
   return new Intl.DateTimeFormat(language, options).format(date);
 }
 
-export function generateWeekAroundDate(workoutDate: Date): Date[] {
-  return [
+export type WeekDayWithWorkoutStatus = {
+  date: Date;
+  isWorkoutDay: boolean;
+};
+
+export function generateWeekAroundDate(
+  workoutDate: Date,
+  workouts: Workout[],
+): WeekDayWithWorkoutStatus[] {
+  if (!workouts.length) {
+    return [];
+  }
+
+  const weekDays = [
     ...Array(3)
       .fill(0)
       .map((_, i) => subDays(workoutDate, 3 - i)),
@@ -58,4 +71,11 @@ export function generateWeekAroundDate(workoutDate: Date): Date[] {
       .fill(0)
       .map((_, i) => addDays(workoutDate, i + 1)),
   ];
+
+  return weekDays.map((weekDay) => ({
+    date: weekDay,
+    isWorkoutDay: workouts.some((workout) =>
+      isSameDay(new Date(workout.date), weekDay),
+    ),
+  }));
 }

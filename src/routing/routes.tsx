@@ -39,7 +39,7 @@ export const router = createBrowserRouter([
   {
     path: RoutesConfig.workout.path,
     element: RoutesConfig.workout.element,
-    loader: workoutDetailsLoader,
+    loader: workoutDataLoader,
     hydrateFallbackElement: <div>Loading...</div>,
   },
 ]);
