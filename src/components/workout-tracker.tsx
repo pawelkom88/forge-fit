@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Plus, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,18 +19,24 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useTheme } from "@/components/theme-provider.tsx";
-import { commonExercises, Exercise, Workout } from "@/utils/workoutData.ts";
-import { muscleGroups } from "@/utils/constants.ts";
+import {
+  commonExercises,
+  Exercise,
+  Workout,
+  workouts,
+} from "@/utils/workoutData.ts";
+import { DATE_PATTERN, muscleGroups } from "@/utils/constants.ts";
+import { useLoaderData } from "react-router-dom";
+import { format } from "date-fns";
+import { DateString } from "@/utils/ts-helpers.ts";
 
 interface Props {
-  workoutDetails: Workout;
+  workout: Workout | undefined;
+  setWorkout: React.Dispatch<React.SetStateAction<Workout | undefined>>;
 }
 
-export function WorkoutTracker({ workoutDetails }): JSX.Element {
+export function WorkoutTracker({ workout, setWorkout }: Props) {
   const { isLightTheme } = useTheme();
-
-  // fetch - pass all details regarding this workout
-  const [workout, setWorkout] = useState<Workout>(workoutDetails ?? []);
   const [newExercise, setNewExercise] = useState<Exercise>({
     exerciseId: "",
     muscleGroup: "",
@@ -97,7 +103,7 @@ export function WorkoutTracker({ workoutDetails }): JSX.Element {
         </h1>
       ) : (
         <>
-          {workout.exercises?.map((exercise) => (
+          {workout?.exercises?.map((exercise) => (
             <Card className="my-2" key={exercise.exerciseId}>
               <CardHeader>
                 <CardTitle>{exercise.exerciseId}</CardTitle>

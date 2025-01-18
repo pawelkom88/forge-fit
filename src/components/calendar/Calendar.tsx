@@ -7,6 +7,7 @@ import { Workout } from "@/utils/workoutData.ts";
 import { formatDateForScreenReader, getWeekDays } from "@/utils/helpers.ts";
 import { DATE_PATTERN } from "@/utils/constants.ts";
 import { useEffect, useRef } from "react";
+import { useLocalStorage } from "@/hooks/useLocalStorage.ts";
 
 interface Props {
   workouts: Workout[];
@@ -89,12 +90,11 @@ function WorkoutDetailsLink({
   const linkRef = useRef(null);
   const formatedDate = format(workoutDate, DATE_PATTERN.YYYY_MM_DD);
   const formatedDateForScreenReaders = formatDateForScreenReader(workoutDate);
+  const { value } = useLocalStorage("workoutDate", formatedDate);
 
   useEffect(() => {
-    const savedDate = localStorage.getItem("workoutDate");
-
-    if (savedDate && linkRef.current) {
-      const linkElement = document.querySelector(`[data-date="${savedDate}"]`);
+    if (value && linkRef.current) {
+      const linkElement = document.querySelector(`[data-date="${value}"]`);
       linkElement?.focus();
     }
   }, []);

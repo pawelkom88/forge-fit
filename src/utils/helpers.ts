@@ -58,9 +58,9 @@ export function generateWeekAroundDate(
   workoutDate: Date,
   workouts: Workout[],
 ): WeekDayWithWorkoutStatus[] {
-  if (!workouts.length) {
-    return [];
-  }
+  // if (!workouts.length) {
+  //   return [];
+  // }
 
   const weekDays = [
     ...Array(3)
@@ -74,7 +74,7 @@ export function generateWeekAroundDate(
 
   return weekDays.map((weekDay) => ({
     date: weekDay,
-    isWorkoutDay: workouts.some((workout) =>
+    isWorkoutDay: workouts?.some((workout) =>
       isSameDay(new Date(workout.date), weekDay),
     ),
   }));

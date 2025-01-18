@@ -61,6 +61,9 @@
     - Warm-up set calculations
     - Weight presets
 
+4. Training and nutrition plan based on user data ( including data from user profile like height weight etc )
+- custom api key
+
 ## 2. User Stories and Acceptance Criteria
 
 ### Authentication (US-AUTH)

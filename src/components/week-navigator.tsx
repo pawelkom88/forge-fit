@@ -2,28 +2,32 @@ import { format, isAfter, isBefore } from "date-fns";
 import {
   formatDateForScreenReader,
   generateWeekAroundDate,
-  WeekDayWithWorkoutStatus,
 } from "@/utils/helpers.ts";
 import { DATE_PATTERN } from "@/utils/constants.ts";
 import { DateString } from "@/utils/ts-helpers.ts";
-import { Link, useLoaderData } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import React from "react";
 import { Workout } from "@/utils/workoutData.ts";
 
 interface Props {
+  workouts: Workout[];
+  weekAround: ReturnType<typeof generateWeekAroundDate>;
+  setWeekAround: React.Dispatch<
+    React.SetStateAction<ReturnType<typeof generateWeekAroundDate>>
+  >;
   workoutDate: DateString;
+  onDateChange: React.Dispatch<React.SetStateAction<DateString>>;
 }
 
-export function WeekNavigator({ workoutDate }: Props) {
-  // TODO: on mobile - slider
-  const workouts = useLoaderData() as Workout[];
-  const weekDays = generateWeekAroundDate(new Date(workoutDate), workouts);
-  const [weekAround, setWeekAround] =
-    useState<WeekDayWithWorkoutStatus[]>(weekDays);
-
-  console.log(workouts);
-
+export function WeekNavigator({
+  workouts,
+  workoutDate,
+  weekAround,
+  setWeekAround,
+  onDateChange,
+}: Props) {
+  // TODO:
   return (
     <div className="relative">
       <button
@@ -50,6 +54,9 @@ export function WeekNavigator({ workoutDate }: Props) {
 
           return (
             <Link
+              onClick={() =>
+                onDateChange(format(date, DATE_PATTERN.YYYY_MM_DD))
+              }
               aria-label={`${formatedDateForScreenReaders}`}
               to={`/workout/${format(date, DATE_PATTERN.YYYY_MM_DD)}`}
               key={date.toISOString()}

@@ -15,23 +15,53 @@ import { useTheme } from "@/components/theme-provider.tsx";
 import { RoutesConfig } from "@/routing/routes.tsx";
 import { DATE_PATTERN } from "@/utils/constants.ts";
 import type { Workout } from "@/utils/workoutData.ts";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useLocalStorage } from "@/hooks/useLocalStorage.ts";
+import {
+  generateWeekAroundDate,
+  WeekDayWithWorkoutStatus,
+} from "@/utils/helpers.ts";
+
+// TODO: add skip to main content - id already set to workout
+// todo: extract key to variable and reuse ?
 
 export default function WorkoutDayPage() {
   const { isLightTheme } = useTheme();
-  const workout = useLoaderData() as Workout;
+  const workouts = useLoaderData() as Workout[];
+
   const { workoutDate } = useParams() as { workoutDate: DateString };
+
+  const weekDays = generateWeekAroundDate(new Date(workoutDate), workouts);
+
+  const [weekAround, setWeekAround] =
+    useState<WeekDayWithWorkoutStatus[]>(weekDays);
+
+  // const [workout, setWorkout] = useState(() => {
+  //   return workouts.find((workout) => {
+  //     const formatedWorkoutDate = format(workout.date, DATE_PATTERN.YYYY_MM_DD);
+  //     return workoutDate === formatedWorkoutDate;
+  //   });
+  // });
+
+  const [workout, setWorkout] = useState<Workout | null>(null);
+
+  const handleDateChange = (newDate: DateString) => {
+    const workoutDetails = workouts.find((workout) => {
+      const formatedWorkoutDate = format(workout.date, DATE_PATTERN.YYYY_MM_DD);
+      return newDate === formatedWorkoutDate;
+    });
+
+    setWorkout(workoutDetails ?? null);
+  };
+
   const headingRef = useRef<HTMLHeadingElement>(null);
 
-  useEffect(() => {
-    localStorage.setItem("workoutDate", workoutDate);
-  }, [workoutDate]);
-
-  // TODO: add skip to main content - id already set to workout
+  const { setValue } = useLocalStorage("workoutDate", workoutDate);
 
   useEffect(() => {
     headingRef.current?.focus();
     document.title = `Workout page for ${workoutDate}`;
+    setValue(workoutDate);
   }, []);
 
   return (
@@ -40,7 +70,6 @@ export default function WorkoutDayPage() {
         <div className="flex items-center gap-2">
           <Calendar className="h-5 w-5" />
           <h1 ref={headingRef} tabIndex={-1} className="text-2xl font-bold">
-            {/*// TODO: add to config*/}
             {format(
               workoutDate,
               `${DATE_PATTERN.ABBR4}, ${DATE_PATTERN.FULL_MONTH} ${DATE_PATTERN.DAY} `,
@@ -51,7 +80,13 @@ export default function WorkoutDayPage() {
           <ArrowLeftCircle size="30" aria-hidden="true" />
         </Link>
       </div>
-      <WeekNavigator workoutDate={workoutDate} />
+      <WeekNavigator
+        workouts={workouts}
+        workoutDate={workoutDate}
+        weekAround={weekAround}
+        setWeekAround={setWeekAround}
+        onDateChange={handleDateChange}
+      />
       <Tabs defaultValue="workout" className="mt-6">
         <TabsList
           className={`grid gap-2 w-full grid-cols-2 ${isLightTheme ? "bg-purple" : "bg-white"} ${isLightTheme ? "text-white" : "text-black"}`}
@@ -68,7 +103,7 @@ export default function WorkoutDayPage() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="workout">
-          <WorkoutTracker workoutDetails={workout} />
+          <WorkoutTracker workout={workout} setWorkout={setWorkout} />
         </TabsContent>
         <TabsContent value="nutrition">
           <NutritionTracker />

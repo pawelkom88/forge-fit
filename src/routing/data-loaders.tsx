@@ -8,15 +8,15 @@ export const rootLoader = async (): Promise<Workout[]> => {
   return workouts;
 };
 
-export const workoutDetailsLoader = async ({
-  params,
-}: LoaderFunctionArgs): Promise<Workout | null> => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  const workout = workouts.find((workout) => {
-    const workoutDate = format(workout.date, DATE_PATTERN.YYYY_MM_DD);
-    return params.workoutDate === workoutDate;
-  });
-
-  return workout ?? null;
-};
+// export const workoutDetailsLoader = async ({
+//   params,
+// }: LoaderFunctionArgs): Promise<Workout | null> => {
+//   await new Promise((resolve) => setTimeout(resolve, 1000));
+//
+//   const workout = workouts.find((workout) => {
+//     const workoutDate = format(workout.date, DATE_PATTERN.YYYY_MM_DD);
+//     return params.workoutDate === workoutDate;
+//   });
+//
+//   return workout ?? null;
+// };
