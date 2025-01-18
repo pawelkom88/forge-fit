@@ -15,13 +15,7 @@ import { useTheme } from "@/components/theme-provider.tsx";
 import { RoutesConfig } from "@/routing/routes.tsx";
 import { DATE_PATTERN } from "@/utils/constants.ts";
 import type { Workout } from "@/utils/workoutData.ts";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { generateWeekDays } from "@/utils/helpers.ts";
 import { useLocalStorage } from "@/hooks/useLocalStorage.ts";
 
@@ -29,20 +23,22 @@ import { useLocalStorage } from "@/hooks/useLocalStorage.ts";
 // todo: extract key to variable and reuse ?
 
 export default function WorkoutDayPage() {
-  const workouts = useLoaderData() as Workout[];
-  const [workout, setWorkout] = useState<Workout | null>(null);
+  const workout = useLoaderData();
+  const [workoutDetails, setWorkoutDetails] = useState<Workout | null>(workout);
 
   return (
     <section className="bg-background container mx-auto pt-6  px-4 max-w-4xl">
       <WorkoutDayHeader />
       <WeekNavigator>
         <WorkoutDayOverview
-          workouts={workouts}
-          setWorkoutDetails={setWorkout}
+          workout={workoutDetails}
+          setWorkoutDetails={setWorkoutDetails}
         />
       </WeekNavigator>
       <WorkoutDayTabs
-        tracker={<WorkoutTracker workout={workout} setWorkout={setWorkout} />}
+        tracker={
+          <WorkoutTracker workout={workout} setWorkout={setWorkoutDetails} />
+        }
         nutrition={<NutritionTracker />}
       />
     </section>
@@ -51,7 +47,6 @@ export default function WorkoutDayPage() {
 
 function WorkoutDayHeader() {
   const { workoutDate } = useParams() as { workoutDate: DateString };
-
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -104,48 +99,33 @@ function WorkoutDayTabs({ tracker, nutrition }: WorkoutDayNavigationProps) {
 }
 
 interface WorkoutDayOverviewProps {
-  workouts: Workout[];
+  workout: Workout | null;
   setWorkoutDetails: (workout: Workout | null) => void;
 }
 
 function WorkoutDayOverview({
-  workouts,
+  workout,
   setWorkoutDetails,
 }: WorkoutDayOverviewProps) {
   const { workoutDate } = useParams() as { workoutDate: DateString };
-  const weekDays = generateWeekDays(new Date(workoutDate), workouts);
   const { setValue } = useLocalStorage("workoutDate", workoutDate);
-  const [selectedDate, setSelectedDate] = useState(workoutDate);
 
-  const memo = useMemo(() => {
-    const workoutDetails = workouts.find(({ date }) => {
-      const formatedWorkoutDate = format(date, DATE_PATTERN.YYYY_MM_DD);
-      return selectedDate === formatedWorkoutDate;
-    });
-
-    return workoutDetails ?? null;
-  }, [workouts]);
-
-  const handleDateChange = useCallback(
-    (selectedDate: DateString) => {
-      setWorkoutDetails(memo ?? null);
-      setValue(selectedDate);
-      setSelectedDate(selectedDate);
-    },
-    [memo, setWorkoutDetails, setValue],
-  );
+  const handleDateChange = (selectedDate: DateString) => {
+    setWorkoutDetails(workout ?? null);
+    setValue(selectedDate);
+  };
 
   return (
     <>
-      {weekDays.map(({ date, isWorkoutDay }) => {
+      {generateWeekDays(new Date(workoutDate)).map((date) => {
         const today = new Date();
         const formatedDate = format(
           date,
           DATE_PATTERN.YYYY_MM_DD,
         ) as DateString;
         const isSelectedDate = workoutDate === formatedDate;
-        const isFutureWorkout = isAfter(date, today) && isWorkoutDay;
-        const isPastWorkout = isBefore(date, today) && isWorkoutDay;
+        const isFutureWorkout = isAfter(date, today) && isSelectedDate;
+        const isPastWorkout = isBefore(date, today) && isSelectedDate;
 
         return (
           <Link

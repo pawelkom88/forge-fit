@@ -2,11 +2,16 @@ import { ErrorPage } from "@/pages/error/error-page.tsx";
 import App from "@/app/layout.tsx";
 import WorkoutDayPage from "@/pages/workouts/workout-day.page.tsx";
 import { createBrowserRouter } from "react-router-dom";
-import { rootLoader as workoutDataLoader } from "@/routing/data-loaders.tsx";
+import {
+  rootLoader as workoutDataLoader,
+  workoutDetailsLoader,
+} from "@/routing/data-loaders.tsx";
+import { LoaderFunctionArgs } from "react-router";
 
 export const RoutesConfig = {
   root: {
     path: "/",
+    element: <div>xxx</div>,
     // element: <LandingPage />,
     errorElement: <ErrorPage />,
   },
@@ -36,7 +41,9 @@ export const router = createBrowserRouter([
   {
     path: RoutesConfig.workout.path,
     element: RoutesConfig.workout.element,
-    loader: workoutDataLoader,
+    loader: ({ params }: LoaderFunctionArgs) => {
+      return workoutDetailsLoader({ params });
+    },
     hydrateFallbackElement: <div>Loading...</div>,
   },
 ]);

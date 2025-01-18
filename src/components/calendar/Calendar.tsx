@@ -3,7 +3,6 @@ import { ChevronLeft, ChevronRight, Circle } from "lucide-react";
 import { useCalendar } from "@/hooks/useCalendar.tsx";
 import { WorkoutDateInput } from "@/components/workout-date-input/WorkoutDateInput.tsx";
 import { Link, useLoaderData } from "react-router-dom";
-import { Workout } from "@/utils/workoutData.ts";
 import {
   formatDateForScreenReader,
   getWeekDays,
@@ -14,7 +13,7 @@ import { useEffect, useRef } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage.ts";
 
 export default function Calendar() {
-  const workouts = useLoaderData() as Workout[];
+  const workouts = useLoaderData();
 
   const {
     startDay,
