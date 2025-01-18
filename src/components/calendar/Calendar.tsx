@@ -106,10 +106,11 @@ function WorkoutDetailsLink({
       aria-label={`${isPastWorkout || isFutureWorkout ? `Workout details for ${formatedDateForScreenReaders} : ""` : `Enter to add workout for ${formatedDateForScreenReaders}`}`}
       to={`/workout/${formatedDate}`}
       className={`grid place-items-center
-        relative min-h-8 sm:min-h-20 p-1 sm:p-2 rounded-lg text-contrast hover:text-contrastReversed text-center transition-colors duration-200 text-md sm:text-xl hover:bg-contrast hover:shadow focus-visible:bg-yellow-500
-        ${isToday(workoutDate) ? "bg-teriary text-white font-bold shadow shadow-teriary" : ""}
-        ${isPastWorkout ? "bg-quaternary text-white shadow shadow-quaternary" : ""}
-        ${isFutureWorkout ? "bg-quinary text-black shadow shadow-quinary" : ""}
+        relative min-h-8 sm:min-h-20 p-1 sm:p-2 rounded-lg text-contrast hover:text-contrastReversed text-center
+        transition-colors duration-200 text-md sm:text-xl hover:bg-contrast focus-visible:bg-yellow-500
+        ${isToday(workoutDate) ? "bg-teriary text-white font-bold" : ""}
+        ${isPastWorkout ? "bg-quaternary text-white" : ""}
+        ${isFutureWorkout ? "bg-quinary text-contrast" : ""}
       `}
     >
       <time dateTime={formatedDate}>
@@ -133,7 +134,7 @@ function WorkoutLegend() {
       <dd>Today's date</dd>
       <dd>&#124;</dd>
       <dt>
-        <Circle strokeWidth={1} fill="hsl(53, 98%, 77%)" aria-hidden="true" />
+        <Circle strokeWidth={1} fill="hsl(300, 28%, 47%)" aria-hidden="true" />
       </dt>
       <dd>Future workouts</dd>
     </dl>

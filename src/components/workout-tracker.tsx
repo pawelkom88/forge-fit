@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Plus, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,20 +19,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useTheme } from "@/components/theme-provider.tsx";
-import {
-  commonExercises,
-  Exercise,
-  Workout,
-  workouts,
-} from "@/utils/workoutData.ts";
-import { DATE_PATTERN, muscleGroups } from "@/utils/constants.ts";
-import { useLoaderData } from "react-router-dom";
-import { format } from "date-fns";
-import { DateString } from "@/utils/ts-helpers.ts";
+import { commonExercises, Exercise, Workout } from "@/utils/workoutData.ts";
+import { muscleGroups } from "@/utils/constants.ts";
 
 interface Props {
-  workout: Workout | undefined;
-  setWorkout: React.Dispatch<React.SetStateAction<Workout | undefined>>;
+  workout: Workout | null;
+  setWorkout: (workout: Workout | null) => void;
 }
 
 export function WorkoutTracker({ workout, setWorkout }: Props) {

@@ -7,27 +7,18 @@ import { DATE_PATTERN } from "@/utils/constants.ts";
 import { DateString } from "@/utils/ts-helpers.ts";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import React from "react";
-import { Workout } from "@/utils/workoutData.ts";
 
 interface Props {
-  workouts: Workout[];
-  weekAround: ReturnType<typeof generateWeekAroundDate>;
-  setWeekAround: React.Dispatch<
-    React.SetStateAction<ReturnType<typeof generateWeekAroundDate>>
-  >;
   workoutDate: DateString;
-  onDateChange: React.Dispatch<React.SetStateAction<DateString>>;
+  weekAround: ReturnType<typeof generateWeekAroundDate>;
+  onDateChange: (newDate: string) => void;
 }
 
 export function WeekNavigator({
-  workouts,
   workoutDate,
   weekAround,
-  setWeekAround,
   onDateChange,
 }: Props) {
-  // TODO:
   return (
     <div className="relative">
       <button
