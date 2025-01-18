@@ -1,19 +1,21 @@
-import { format, isAfter, isBefore, isSameDay, isToday } from "date-fns";
+import { format, isAfter, isBefore, isToday } from "date-fns";
 import { ChevronLeft, ChevronRight, Circle } from "lucide-react";
 import { useCalendar } from "@/hooks/useCalendar.tsx";
 import { WorkoutDateInput } from "@/components/workout-date-input/WorkoutDateInput.tsx";
-import { Link } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import { Workout } from "@/utils/workoutData.ts";
-import { formatDateForScreenReader, getWeekDays } from "@/utils/helpers.ts";
+import {
+  formatDateForScreenReader,
+  getWeekDays,
+  isWorkoutDay,
+} from "@/utils/helpers.ts";
 import { DATE_PATTERN } from "@/utils/constants.ts";
 import { useEffect, useRef } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage.ts";
 
-interface Props {
-  workouts: Workout[];
-}
+export default function Calendar() {
+  const workouts = useLoaderData() as Workout[];
 
-export default function Calendar({ workouts }: Props) {
   const {
     startDay,
     currentMonth,
@@ -53,14 +55,10 @@ export default function Calendar({ workouts }: Props) {
         <hr className="col-span-7" />
         <EmptyCells startDay={startDay} />
         {monthDays.map((day) => {
-          // used n two place - consider creating a hook
           const today = new Date();
-          const isWorkoutDay = workouts.some(({ date }) =>
-            isSameDay(date, day),
-          );
-
-          const isFutureWorkout = isAfter(day, today) && isWorkoutDay;
-          const isPastWorkout = isBefore(day, today) && isWorkoutDay;
+          const workoutDay = isWorkoutDay(workouts, day);
+          const isFutureWorkout = isAfter(day, today) && workoutDay;
+          const isPastWorkout = isBefore(day, today) && workoutDay;
 
           return (
             <WorkoutDetailsLink
@@ -95,7 +93,9 @@ function WorkoutDetailsLink({
   useEffect(() => {
     if (value && linkRef.current) {
       const linkElement = document.querySelector(`[data-date="${value}"]`);
-      linkElement?.focus();
+      if (linkElement instanceof HTMLElement) {
+        linkElement.focus();
+      }
     }
   }, []);
 
@@ -120,7 +120,7 @@ function WorkoutDetailsLink({
   );
 }
 
-function WorkoutLegend() {
+export function WorkoutLegend({ isSelectedDate = false }) {
   return (
     <dl className="text-purple flex gap-2 mb-8">
       <dt>
@@ -131,7 +131,7 @@ function WorkoutLegend() {
       <dt>
         <Circle strokeWidth={1} fill="hsl(348, 66%, 50%)" aria-hidden="true" />
       </dt>
-      <dd>Today's date</dd>
+      <dd>{isSelectedDate ? "Selected date" : "Today's date"}</dd>
       <dd>&#124;</dd>
       <dt>
         <Circle strokeWidth={1} fill="hsl(300, 28%, 47%)" aria-hidden="true" />

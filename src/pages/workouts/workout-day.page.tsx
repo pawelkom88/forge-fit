@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, isAfter, isBefore } from "date-fns";
 import { ArrowLeftCircle, Calendar } from "lucide-react";
 import {
   Tabs,
@@ -15,53 +15,33 @@ import { useTheme } from "@/components/theme-provider.tsx";
 import { RoutesConfig } from "@/routing/routes.tsx";
 import { DATE_PATTERN } from "@/utils/constants.ts";
 import type { Workout } from "@/utils/workoutData.ts";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { generateWeekDays } from "@/utils/helpers.ts";
 import { useLocalStorage } from "@/hooks/useLocalStorage.ts";
-import {
-  generateWeekAroundDate,
-  WeekDayWithWorkoutStatus,
-} from "@/utils/helpers.ts";
 
 // TODO: add skip to main content - id already set to workout
 // todo: extract key to variable and reuse ?
 
 export default function WorkoutDayPage() {
-  // const headingRef = useRef<HTMLHeadingElement>(null);
   const workouts = useLoaderData() as Workout[];
-
-  const { workoutDate } = useParams() as { workoutDate: DateString };
-
-  const { setValue } = useLocalStorage("workoutDate", workoutDate);
-
-  const [weekAround, setWeekAround] = useState<WeekDayWithWorkoutStatus[]>(() =>
-    generateWeekAroundDate(new Date(workoutDate), workouts),
-  );
   const [workout, setWorkout] = useState<Workout | null>(null);
-
-  const handleDateChange = useCallback(
-    (newDate: string) => {
-      const workoutDetails = workouts.find(({ date }) => {
-        const formatedWorkoutDate = format(date, DATE_PATTERN.YYYY_MM_DD);
-        return newDate === formatedWorkoutDate;
-      });
-
-      setWorkout(workoutDetails ?? null);
-      setValue(workoutDate);
-    },
-    [workouts],
-  );
 
   return (
     <section className="bg-background container mx-auto pt-6  px-4 max-w-4xl">
-      <WorkoutDayHeader workoutDate={workoutDate} />
-      <WeekNavigator
-        // workouts={workouts}
-        workoutDate={workoutDate}
-        weekAround={weekAround}
-        // setWeekAround={setWeekAround}
-        onDateChange={handleDateChange}
-      />
-      <WorkoutDayNavigation
+      <WorkoutDayHeader />
+      <WeekNavigator>
+        <WorkoutDayOverview
+          workouts={workouts}
+          setWorkoutDetails={setWorkout}
+        />
+      </WeekNavigator>
+      <WorkoutDayTabs
         tracker={<WorkoutTracker workout={workout} setWorkout={setWorkout} />}
         nutrition={<NutritionTracker />}
       />
@@ -69,17 +49,14 @@ export default function WorkoutDayPage() {
   );
 }
 
-interface WorkoutDayHeaderProps {
-  workoutDate: DateString;
-}
+function WorkoutDayHeader() {
+  const { workoutDate } = useParams() as { workoutDate: DateString };
 
-function WorkoutDayHeader({ workoutDate }: WorkoutDayHeaderProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     headingRef.current?.focus();
     document.title = `Workout page for ${workoutDate}`;
-    // setValue(workoutDate);
   }, []);
 
   return (
@@ -105,10 +82,7 @@ interface WorkoutDayNavigationProps {
   nutrition: React.ReactNode;
 }
 
-function WorkoutDayNavigation({
-  tracker,
-  nutrition,
-}: WorkoutDayNavigationProps) {
+function WorkoutDayTabs({ tracker, nutrition }: WorkoutDayNavigationProps) {
   const { isLightTheme } = useTheme();
 
   return (
@@ -126,5 +100,77 @@ function WorkoutDayNavigation({
       <TabsContent value="workout">{tracker}</TabsContent>
       <TabsContent value="nutrition">{nutrition}</TabsContent>
     </Tabs>
+  );
+}
+
+interface WorkoutDayOverviewProps {
+  workouts: Workout[];
+  setWorkoutDetails: (workout: Workout | null) => void;
+}
+
+function WorkoutDayOverview({
+  workouts,
+  setWorkoutDetails,
+}: WorkoutDayOverviewProps) {
+  const { workoutDate } = useParams() as { workoutDate: DateString };
+  const weekDays = generateWeekDays(new Date(workoutDate), workouts);
+  const { setValue } = useLocalStorage("workoutDate", workoutDate);
+  const [selectedDate, setSelectedDate] = useState(workoutDate);
+
+  const memo = useMemo(() => {
+    const workoutDetails = workouts.find(({ date }) => {
+      const formatedWorkoutDate = format(date, DATE_PATTERN.YYYY_MM_DD);
+      return selectedDate === formatedWorkoutDate;
+    });
+
+    return workoutDetails ?? null;
+  }, [workouts]);
+
+  const handleDateChange = useCallback(
+    (selectedDate: DateString) => {
+      setWorkoutDetails(memo ?? null);
+      setValue(selectedDate);
+      setSelectedDate(selectedDate);
+    },
+    [memo, setWorkoutDetails, setValue],
+  );
+
+  return (
+    <>
+      {weekDays.map(({ date, isWorkoutDay }) => {
+        const today = new Date();
+        const formatedDate = format(
+          date,
+          DATE_PATTERN.YYYY_MM_DD,
+        ) as DateString;
+        const isSelectedDate = workoutDate === formatedDate;
+        const isFutureWorkout = isAfter(date, today) && isWorkoutDay;
+        const isPastWorkout = isBefore(date, today) && isWorkoutDay;
+
+        return (
+          <Link
+            onClick={() => handleDateChange(formatedDate)}
+            // aria-label={`${formatedDateForScreenReaders}`}
+            to={`/workout/${formatedDate}`}
+            key={date.toISOString()}
+            className={`p-2 rounded-lg hover:bg-contrast hover:text-contrastReversed
+              ${isSelectedDate ? "bg-teriary font-bold hover:bg-teriary text-contrastReversed" : "text-contrast"}
+              `}
+          >
+            <div
+              className={`text-sm ${!isSelectedDate && isPastWorkout ? "bg-quaternary text-white" : ""}
+                ${!isSelectedDate && isFutureWorkout ? "bg-quinary text-black" : ""}`}
+            >
+              {format(date, DATE_PATTERN.ABBR3)}
+            </div>
+            <div
+              className={`text-lg ${isSelectedDate ? "text-xl" : "text-contrast"}`}
+            >
+              {format(date, "d")}
+            </div>
+          </Link>
+        );
+      })}
+    </>
   );
 }

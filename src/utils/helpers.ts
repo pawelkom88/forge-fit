@@ -54,15 +54,8 @@ export type WeekDayWithWorkoutStatus = {
   isWorkoutDay: boolean;
 };
 
-export function generateWeekAroundDate(
-  workoutDate: Date,
-  workouts: Workout[],
-): WeekDayWithWorkoutStatus[] {
-  // if (!workouts.length) {
-  //   return [];
-  // }
-
-  const weekDays = [
+function generateSurroundingWeekDays(workoutDate: Date) {
+  return [
     ...Array(3)
       .fill(0)
       .map((_, i) => subDays(workoutDate, 3 - i)),
@@ -71,11 +64,20 @@ export function generateWeekAroundDate(
       .fill(0)
       .map((_, i) => addDays(workoutDate, i + 1)),
   ];
+}
 
-  return weekDays.map((weekDay) => ({
+export function isWorkoutDay(workouts: Workout[], weekDay: Date) {
+  return workouts?.some((workout) =>
+    isSameDay(new Date(workout.date), weekDay),
+  );
+}
+
+export function generateWeekDays(
+  workoutDate: Date,
+  workouts: Workout[],
+): WeekDayWithWorkoutStatus[] {
+  return generateSurroundingWeekDays(workoutDate).map((weekDay) => ({
     date: weekDay,
-    isWorkoutDay: workouts?.some((workout) =>
-      isSameDay(new Date(workout.date), weekDay),
-    ),
+    isWorkoutDay: isWorkoutDay(workouts, weekDay),
   }));
 }
