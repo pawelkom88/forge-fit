@@ -27,7 +27,6 @@ export const useFetch = <T>(url?: string): Data<T> => {
 
       try {
         await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulating a delay
-        // Simulate fetching or calling a function
         const fetchedData = url ? workoutDetailsLoader(url) : workouts;
         setData(fetchedData);
         setLoading("complete");

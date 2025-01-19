@@ -14,10 +14,12 @@ import { useLocalStorage } from "@/hooks/useLocalStorage.ts";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { useFetch } from "@/hooks/useFetch.ts";
 import { Workout } from "@/utils/workoutData.ts";
+import { ErrorAlert } from "@/components/alert/Alert.tsx";
 
 export default function Calendar() {
+  const { data, loading, error } = useFetch<Workout[]>();
+
   const { value } = useLocalStorage("workoutDate", null);
-  console.log(value);
   const {
     startDay,
     currentMonth,
@@ -26,6 +28,10 @@ export default function Calendar() {
     goToNextMonth,
     handleDateChange,
   } = useCalendar(value);
+
+  if (error) {
+    return <ErrorAlert title="Error" description={error.message} />;
+  }
 
   return (
     <section className="bg-foreground rounded-lg p-2 sm:p-4 flex flex-col border">
@@ -58,11 +64,18 @@ export default function Calendar() {
         <hr className="col-span-7" />
         <EmptyCells startDay={startDay} />
         {monthDays.map((day) => (
-          <WorkoutDetailsLink
-            key={day.toISOString()}
-            monthDay={day}
-            currentMonth={currentMonth}
-          />
+          <>
+            {loading === "pending" ? (
+              <Skeleton className="w-[33px] sm:w-[83px] sm:h-[80px] lg:w-[125px] xl:w-[191px] h-[33px]" />
+            ) : (
+              <WorkoutDetailsLink
+                data={data}
+                key={day.toISOString()}
+                monthDay={day}
+                currentMonth={currentMonth}
+              />
+            )}
+          </>
         ))}
       </ol>
     </section>
@@ -70,15 +83,16 @@ export default function Calendar() {
 }
 
 interface WorkoutDetailsLinkProps {
+  data: Workout[] | null;
   monthDay: Date;
   currentMonth: Date;
 }
 
 function WorkoutDetailsLink({
+  data,
   monthDay,
   currentMonth,
 }: WorkoutDetailsLinkProps) {
-  const { data, loading, error } = useFetch<Workout[]>();
   const isWorkoutDay = doesWorkoutExistOnDate(data, monthDay);
   const linkRef = useRef(null);
   const formatedDate = format(monthDay, DATE_PATTERN.YYYY_MM_DD);
@@ -102,28 +116,23 @@ function WorkoutDetailsLink({
 
   return (
     <>
-      {error && <p>{error.message}</p>}
-      {loading === "pending" ? (
-        <Skeleton className="w-[33px] sm:w-[83px] sm:h-[80px] lg:w-[125px] xl:w-[191px] h-[33px]" />
-      ) : (
-        <Link
-          data-date={formatedDate}
-          ref={linkRef}
-          aria-label={`${isPastWorkout || isFutureWorkout ? `Workout details for ${formatedDateForScreenReaders} : ""` : `Enter to add workout for ${formatedDateForScreenReaders}`}`}
-          to={`/workout/${formatedDate}`}
-          className={`grid place-items-center
+      <Link
+        data-date={formatedDate}
+        ref={linkRef}
+        aria-label={`${isPastWorkout || isFutureWorkout ? `Workout details for ${formatedDateForScreenReaders} : ""` : `Enter to add workout for ${formatedDateForScreenReaders}`}`}
+        to={`/workout/${formatedDate}`}
+        className={`grid place-items-center
             relative min-h-8 sm:min-h-20 p-1 sm:p-2 rounded-lg text-contrast hover:text-contrastReversed text-center
             transition-colors duration-200 text-md sm:text-xl hover:bg-contrast focus-visible:bg-focusVisible
             ${isToday(monthDay) ? "bg-teriary text-white font-bold" : ""}
             ${isPastWorkout ? "bg-quaternary text-white" : ""}
             ${isFutureWorkout ? "bg-quinary text-contrast" : ""}
       `}
-        >
-          <time dateTime={formatedDate}>
-            {format(monthDay, DATE_PATTERN.DAY)}
-          </time>
-        </Link>
-      )}
+      >
+        <time dateTime={formatedDate}>
+          {format(monthDay, DATE_PATTERN.DAY)}
+        </time>
+      </Link>
     </>
   );
 }

@@ -23,15 +23,21 @@ import {
 import { useLocalStorage } from "@/hooks/useLocalStorage.ts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useFetch } from "@/hooks/useFetch.ts";
+import { ErrorAlert } from "@/components/alert/Alert.tsx";
 
 // TODO: add skip to main content - id already set to workout
 // todo: extract key to variable and reuse ?
 
 export default function WorkoutDayPage() {
   const { workoutDate } = useParams() as { workoutDate: DateString };
+  // remember to remove workout Data as param un useFetch while DB is ready
   const { data, loading, error } = useFetch<Workout>(workoutDate);
   // TODO: what to do with state - move down to tracker - collect all and send to server ? ?
   const [workoutDetails, setWorkoutDetails] = useState<Workout | null>(data);
+
+  if (error) {
+    return <ErrorAlert title="Error" description={error.message} />;
+  }
 
   return (
     <section className="bg-background container mx-auto pt-6  px-4 max-w-4xl">
@@ -39,12 +45,8 @@ export default function WorkoutDayPage() {
       <WeekNavigator>
         <WorkoutDayOverview />
       </WeekNavigator>
-      {error && <p>{error.message}</p>}
       {loading === "pending" ? (
-        <div className="px-2">
-          <Skeleton className="w-full h-[36px] mt-6" />
-          <Skeleton className="w-full h-[226px] my-2" />
-        </div>
+        <WorkoutDetailsSkeleton />
       ) : (
         <WorkoutDayTabs
           tracker={
@@ -178,6 +180,15 @@ function WorkoutDayOverviewSkeleton() {
       <Skeleton className="w-[116px] h-[64px]" />
       <Skeleton className="w-[116px] h-[64px]" />
       <Skeleton className="w-[116px] h-[64px]" />
+    </div>
+  );
+}
+
+function WorkoutDetailsSkeleton() {
+  return (
+    <div className="px-2">
+      <Skeleton className="w-full h-[36px] mt-6" />
+      <Skeleton className="w-full h-[226px] my-2" />
     </div>
   );
 }
