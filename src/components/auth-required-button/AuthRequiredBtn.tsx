@@ -11,6 +11,7 @@ export function AuthRequiredButton({ children, saveUserProgress }: Props) {
   // const { isUserAuthenticated } = useContext(AuthContext);
   const isUserAuthenticated = true;
 
+  // re=think how t is going to work
   const handleSave = () => {
     if (isUserAuthenticated) {
       saveUserProgress();

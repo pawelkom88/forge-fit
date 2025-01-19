@@ -48,7 +48,7 @@ export default function Calendar() {
           </button>
         </div>
       </div>
-      // user enters date and that date should be focused in the calendar
+      {/*// user enters date and that date should be focused in the calendar*/}
       <WorkoutDateInput />
       <WorkoutLegend />
       <hr className="col-span-7" />
@@ -64,11 +64,7 @@ export default function Calendar() {
   );
 }
 
-interface DayButtonProps {
-  monthDay: Date;
-}
-
-function WorkoutDetailsLink({ monthDay }: DayButtonProps) {
+function WorkoutDetailsLink({ monthDay }: { monthDay: Date }) {
   const { data, loading, error } = useFetch<Workout[]>();
   const isWorkoutDay = doesWorkoutExistOnDate(data, monthDay);
   const linkRef = useRef(null);
@@ -86,7 +82,7 @@ function WorkoutDetailsLink({ monthDay }: DayButtonProps) {
         linkElement.focus();
       }
     }
-  }, []);
+  }, [value]);
 
   return (
     <>

@@ -29,7 +29,6 @@ interface Props {
 }
 
 export function WorkoutTracker({ workoutDetails, setWorkoutDetails }: Props) {
-  const { isLightTheme } = useTheme();
   const [newExercise, setNewExercise] = useState<Exercise>({
     name: "",
     exerciseId: "",
@@ -289,8 +288,8 @@ function WorkoutDetailsCard({ exercise, onAddSet }: WorkoutDetailsCardProps) {
               variant="outline"
               size="sm"
               className={`${
-                isLightTheme ? "bg-purple" : "bg-white"
-              } ${isLightTheme ? "text-white" : "text-black"} hover:bg-black hover:text-white focus-visible:bg-yellow-500`}
+                isLightTheme ? "bg-purple text-white" : "bg-white text-black"
+              }   hover:bg-black hover:text-white focus-visible:bg-yellow-500`}
             >
               <Plus className="mr-2 h-4 w-4" />
               Add Set
