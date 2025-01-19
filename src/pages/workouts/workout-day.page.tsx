@@ -9,21 +9,33 @@ import {
 import { WeekNavigator } from "@/components/week-navigator.tsx";
 import { WorkoutTracker } from "@/components/workout-tracker.tsx";
 import { NutritionTracker } from "@/components/nutrition-tracker.tsx";
-import { Link, useLoaderData, useParams } from "react-router-dom";
+import {
+  Link,
+  useLoaderData,
+  useNavigation,
+  useParams,
+} from "react-router-dom";
 import { DateString } from "@/utils/ts-helpers.ts";
 import { useTheme } from "@/components/theme-provider.tsx";
 import { RoutesConfig } from "@/routing/routes.tsx";
 import { DATE_PATTERN } from "@/utils/constants.ts";
 import type { Workout } from "@/utils/workoutData.ts";
 import React, { useEffect, useRef, useState } from "react";
-import { generateWeekDays } from "@/utils/helpers.ts";
+import {
+  formatDate,
+  formatDateForScreenReaders,
+  generateWeekDays,
+} from "@/utils/helpers.ts";
 import { useLocalStorage } from "@/hooks/useLocalStorage.ts";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // TODO: add skip to main content - id already set to workout
 // todo: extract key to variable and reuse ?
 
 export default function WorkoutDayPage() {
   const workout = useLoaderData();
+  const { state } = useNavigation();
+
   const [workoutDetails, setWorkoutDetails] = useState<Workout | null>(workout);
 
   return (
@@ -35,12 +47,20 @@ export default function WorkoutDayPage() {
           setWorkoutDetails={setWorkoutDetails}
         />
       </WeekNavigator>
-      <WorkoutDayTabs
-        tracker={
-          <WorkoutTracker workout={workout} setWorkout={setWorkoutDetails} />
-        }
-        nutrition={<NutritionTracker />}
-      />
+
+      {state === "loading" ? (
+        <div className="px-2">
+          <Skeleton className="w-full h-[36px] mt-6" />
+          <Skeleton className="w-full h-[226px] my-2" />
+        </div>
+      ) : (
+        <WorkoutDayTabs
+          tracker={
+            <WorkoutTracker workout={workout} setWorkout={setWorkoutDetails} />
+          }
+          nutrition={<NutritionTracker />}
+        />
+      )}
     </section>
   );
 }
@@ -119,10 +139,7 @@ function WorkoutDayOverview({
     <>
       {generateWeekDays(new Date(workoutDate)).map((date) => {
         const today = new Date();
-        const formatedDate = format(
-          date,
-          DATE_PATTERN.YYYY_MM_DD,
-        ) as DateString;
+        const formatedDate = formatDate(date);
         const isSelectedDate = workoutDate === formatedDate;
         const isFutureWorkout = isAfter(date, today) && isSelectedDate;
         const isPastWorkout = isBefore(date, today) && isSelectedDate;
@@ -130,7 +147,7 @@ function WorkoutDayOverview({
         return (
           <Link
             onClick={() => handleDateChange(formatedDate)}
-            // aria-label={`${formatedDateForScreenReaders}`}
+            aria-label={`${formatDateForScreenReaders(date)}`}
             to={`/workout/${formatedDate}`}
             key={date.toISOString()}
             className={`p-2 rounded-lg hover:bg-contrast hover:text-contrastReversed

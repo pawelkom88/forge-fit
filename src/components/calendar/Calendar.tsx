@@ -4,17 +4,16 @@ import { useCalendar } from "@/hooks/useCalendar.tsx";
 import { WorkoutDateInput } from "@/components/workout-date-input/WorkoutDateInput.tsx";
 import { Link, useLoaderData } from "react-router-dom";
 import {
-  formatDateForScreenReader,
+  formatDateForScreenReaders,
   getWeekDays,
-  isWorkoutDay,
+  doesWorkoutExistOnDate,
+  formatDate,
 } from "@/utils/helpers.ts";
 import { DATE_PATTERN } from "@/utils/constants.ts";
 import { useEffect, useRef } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage.ts";
 
 export default function Calendar() {
-  const workouts = useLoaderData();
-
   const {
     startDay,
     currentMonth,
@@ -46,6 +45,7 @@ export default function Calendar() {
           </button>
         </div>
       </div>
+      // user enters date and that date should be focused in the calendar
       <WorkoutDateInput />
       <WorkoutLegend />
       <hr className="col-span-7" />
@@ -53,41 +53,28 @@ export default function Calendar() {
         <DayOfWeekLabels />
         <hr className="col-span-7" />
         <EmptyCells startDay={startDay} />
-        {monthDays.map((day) => {
-          const today = new Date();
-          const workoutDay = isWorkoutDay(workouts, day);
-          const isFutureWorkout = isAfter(day, today) && workoutDay;
-          const isPastWorkout = isBefore(day, today) && workoutDay;
-
-          return (
-            <WorkoutDetailsLink
-              key={day.toISOString()}
-              workoutDate={day}
-              isFutureWorkout={isFutureWorkout}
-              isPastWorkout={isPastWorkout}
-            />
-          );
-        })}
+        {monthDays.map((day) => (
+          <WorkoutDetailsLink key={day.toISOString()} monthDay={day} />
+        ))}
       </ol>
     </section>
   );
 }
 
 interface DayButtonProps {
-  workoutDate: Date;
-  isPastWorkout: boolean;
-  isFutureWorkout: boolean;
+  monthDay: Date;
 }
 
-function WorkoutDetailsLink({
-  workoutDate,
-  isPastWorkout,
-  isFutureWorkout,
-}: DayButtonProps) {
+function WorkoutDetailsLink({ monthDay }: DayButtonProps) {
+  const workouts = useLoaderData();
+  const isWorkoutDay = doesWorkoutExistOnDate(workouts, monthDay);
   const linkRef = useRef(null);
-  const formatedDate = format(workoutDate, DATE_PATTERN.YYYY_MM_DD);
-  const formatedDateForScreenReaders = formatDateForScreenReader(workoutDate);
+  const formatedDate = formatDate(monthDay);
+  const formatedDateForScreenReaders = formatDateForScreenReaders(monthDay);
   const { value } = useLocalStorage("workoutDate", formatedDate);
+  const today = new Date();
+  const isFutureWorkout = isAfter(monthDay, today) && isWorkoutDay;
+  const isPastWorkout = isBefore(monthDay, today) && isWorkoutDay;
 
   useEffect(() => {
     if (value && linkRef.current) {
@@ -107,14 +94,12 @@ function WorkoutDetailsLink({
       className={`grid place-items-center
         relative min-h-8 sm:min-h-20 p-1 sm:p-2 rounded-lg text-contrast hover:text-contrastReversed text-center
         transition-colors duration-200 text-md sm:text-xl hover:bg-contrast focus-visible:bg-yellow-500
-        ${isToday(workoutDate) ? "bg-teriary text-white font-bold" : ""}
+        ${isToday(monthDay) ? "bg-teriary text-white font-bold" : ""}
         ${isPastWorkout ? "bg-quaternary text-white" : ""}
         ${isFutureWorkout ? "bg-quinary text-contrast" : ""}
       `}
     >
-      <time dateTime={formatedDate}>
-        {format(workoutDate, DATE_PATTERN.DAY)}
-      </time>
+      <time dateTime={formatedDate}>{format(monthDay, DATE_PATTERN.DAY)}</time>
     </Link>
   );
 }
@@ -162,8 +147,8 @@ function DayOfWeekLabels() {
       {getWeekDays().map((day) => {
         return (
           <abbr
-            title={day.toISOString()}
-            key={day.toISOString()}
+            title={formatDate(day)}
+            key={formatDate(day)}
             className="pt-4 text-center font-bold text-purple text-sm sm:text-base no-underline"
           >
             {format(day, DATE_PATTERN.ABBR3)}
