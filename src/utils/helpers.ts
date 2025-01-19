@@ -1,5 +1,5 @@
 import { Theme, THEME_CONFIG } from "@/components/theme-provider.tsx";
-import { isSameDay, addDays, startOfWeek } from "date-fns";
+import { isSameDay, addDays, startOfWeek, subDays } from "date-fns";
 import { DateString } from "@/utils/ts-helpers.ts";
 import { Workout } from "@/utils/workoutData.ts";
 
@@ -51,7 +51,7 @@ export function formatDateForScreenReaders(
 
 export type WeekDayWithWorkoutStatus = {
   date: Date;
-  isWorkoutDay: boolean;
+  isWorkoutDay: boolean | undefined;
 };
 
 export function doesWorkoutExistOnDate(
@@ -63,14 +63,36 @@ export function doesWorkoutExistOnDate(
   );
 }
 
-export function generateWeekDays(workoutDate: Date): Date[] {
-  const weekDays: Date[] = [];
-  for (let i = -3; i <= 3; i++) {
-    weekDays.push(addDays(workoutDate, i));
-  }
-  return weekDays;
-}
+// export function generateWeekDays(workoutDate: Date): Date[] {
+//   const weekDays: Date[] = [];
+//   for (let i = -3; i <= 3; i++) {
+//     weekDays.push(addDays(workoutDate, i));
+//   }
+//   return weekDays;
+// }
 
 export function formatDate(date: Date) {
   return date.toISOString().split("T")[0] as DateString;
+}
+
+function generateSurroundingWeekDays(workoutDate: Date) {
+  return [
+    ...Array(3)
+      .fill(0)
+      .map((_, i) => subDays(workoutDate, 3 - i)),
+    workoutDate,
+    ...Array(3)
+      .fill(0)
+      .map((_, i) => addDays(workoutDate, i + 1)),
+  ];
+}
+
+export function generateWeekDays(
+  workoutDate: Date,
+  workouts: Workout[],
+): WeekDayWithWorkoutStatus[] {
+  return generateSurroundingWeekDays(workoutDate).map((weekDay) => ({
+    date: weekDay,
+    isWorkoutDay: doesWorkoutExistOnDate(workouts, weekDay),
+  }));
 }

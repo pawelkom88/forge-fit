@@ -17,6 +17,7 @@ import { DATE_PATTERN } from "@/utils/constants.ts";
 import type { Workout } from "@/utils/workoutData.ts";
 import React, { useEffect, useRef, useState } from "react";
 import {
+  doesWorkoutExistOnDate,
   formatDate,
   formatDateForScreenReaders,
   generateWeekDays,
@@ -31,6 +32,7 @@ import { useFetch } from "@/hooks/useFetch.ts";
 export default function WorkoutDayPage() {
   const { workoutDate } = useParams() as { workoutDate: DateString };
   const { data, loading, error } = useFetch<Workout>(workoutDate);
+  // TODO: what to do with state ?
   const [workoutDetails, setWorkoutDetails] = useState<Workout | null>(data);
 
   return (
@@ -38,7 +40,7 @@ export default function WorkoutDayPage() {
       <WorkoutDayHeader workoutDate={workoutDate} />
       <WeekNavigator>
         <WorkoutDayOverview
-          workout={workoutDetails}
+          workout={data}
           setWorkoutDetails={setWorkoutDetails}
         />
       </WeekNavigator>
@@ -69,7 +71,7 @@ function WorkoutDayHeader({ workoutDate }: { workoutDate: DateString }) {
   useEffect(() => {
     headingRef.current?.focus();
     document.title = `Workout page for ${workoutDate}`;
-  }, []);
+  }, [workoutDate]);
 
   return (
     <div className="flex items-center justify-between mb-6">
@@ -124,6 +126,7 @@ function WorkoutDayOverview({
   workout,
   setWorkoutDetails,
 }: WorkoutDayOverviewProps) {
+  const { data, loading, error } = useFetch<Workout[]>();
   const { workoutDate } = useParams() as { workoutDate: DateString };
   const { setValue } = useLocalStorage("workoutDate", workoutDate);
 
@@ -134,37 +137,53 @@ function WorkoutDayOverview({
 
   return (
     <>
-      {generateWeekDays(new Date(workoutDate)).map((date) => {
-        const today = new Date();
-        const formatedDate = formatDate(date);
-        const isSelectedDate = workoutDate === formatedDate;
-        const isFutureWorkout = isAfter(date, today) && isSelectedDate;
-        const isPastWorkout = isBefore(date, today) && isSelectedDate;
+      {loading === "pending" ? (
+        <div className="col-[1/-1] px-4 flex gap-2">
+          <Skeleton className="w-[116px] h-[64px]" />
+          <Skeleton className="w-[116px] h-[64px]" />
+          <Skeleton className="w-[116px] h-[64px]" />
+          <Skeleton className="w-[116px] h-[64px]" />
+          <Skeleton className="w-[116px] h-[64px]" />
+          <Skeleton className="w-[116px] h-[64px]" />
+          <Skeleton className="w-[116px] h-[64px]" />
+        </div>
+      ) : (
+        <>
+          {generateWeekDays(new Date(workoutDate), data).map(
+            ({ date, isWorkoutDay }) => {
+              const today = new Date();
+              const formatedDate = formatDate(date);
+              const isSelectedDate = workoutDate === formatedDate;
+              const isFutureWorkout = isAfter(date, today) && isWorkoutDay;
+              const isPastWorkout = isBefore(date, today) && isWorkoutDay;
 
-        return (
-          <Link
-            onClick={() => handleDateChange(formatedDate)}
-            aria-label={`${formatDateForScreenReaders(date)}`}
-            to={`/workout/${formatedDate}`}
-            key={date.toISOString()}
-            className={`p-2 rounded-lg hover:bg-contrast hover:text-contrastReversed
+              return (
+                <Link
+                  onClick={() => handleDateChange(formatedDate)}
+                  aria-label={`${formatDateForScreenReaders(date)}`}
+                  to={`/workout/${formatedDate}`}
+                  key={date.toISOString()}
+                  className={`sm:p-2 rounded-lg hover:bg-contrast hover:text-contrastReversed
               ${isSelectedDate ? "bg-teriary font-bold hover:bg-teriary text-contrastReversed" : "text-contrast"}
               `}
-          >
-            <div
-              className={`text-sm ${!isSelectedDate && isPastWorkout ? "bg-quaternary text-white" : ""}
+                >
+                  <div
+                    className={`text-sm ${!isSelectedDate && isPastWorkout ? "bg-quaternary text-white" : ""}
                 ${!isSelectedDate && isFutureWorkout ? "bg-quinary text-black" : ""}`}
-            >
-              {format(date, DATE_PATTERN.ABBR3)}
-            </div>
-            <div
-              className={`text-lg ${isSelectedDate ? "text-xl" : "text-contrast"}`}
-            >
-              {format(date, "d")}
-            </div>
-          </Link>
-        );
-      })}
+                  >
+                    {format(date, DATE_PATTERN.ABBR3)}
+                  </div>
+                  <div
+                    className={`text-lg ${isSelectedDate ? "text-xl" : "text-contrast"}`}
+                  >
+                    {format(date, "d")}
+                  </div>
+                </Link>
+              );
+            },
+          )}
+        </>
+      )}
     </>
   );
 }
