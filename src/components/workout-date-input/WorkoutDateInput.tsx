@@ -30,6 +30,15 @@ const formSchema = z.object({
     .custom<DateString | "">()
     .refine(
       (date) => {
+        const [year] = date.split("-").map(Number);
+        return year >= 2025;
+      },
+      {
+        message: "Year must be at least 2025",
+      },
+    )
+    .refine(
+      (date) => {
         const [, month] = date.split("-").map(Number);
         return month >= 1 && month <= 12;
       },
@@ -95,18 +104,18 @@ export function WorkoutDateInput({
             render={({ field }) => (
               <FormItem>
                 <div className="flex items-center">
-                  <FormLabel className="sm:text-lg">Workout date</FormLabel>
+                  <FormLabel className="text-lg">Workout date</FormLabel>
                   <Alert onShowAlert={() => setOverlay(!overlay)} />
                 </div>
                 <FormControl>
-                  <div className="flex gap-2">
+                  <div className=" flex gap-2">
                     <Input
                       {...field}
                       id="workout-date"
                       type="text"
                       maxLength={10}
-                      placeholder="Enter workout date in YYYY-MM-DD format"
-                      className=" h-12 p-2 mb-8 focus-visible:bg-focusVisible focus-visible:placeholder:text-black placeholder:text-sm sm:basis-72"
+                      placeholder="Enter date in YYYY-MM-DD format"
+                      className="p-2 focus-visible:bg-focusVisible focus-visible:placeholder:text-black placeholder:text-sm sm:basis-72"
                       value={field.value}
                       onChange={(e) => {
                         const formattedValue = handleInputChange(
@@ -117,14 +126,14 @@ export function WorkoutDateInput({
                     />
                     <Button
                       onClick={() => onDateChange(new Date())}
-                      className="h-[48px] text-white hover:bg-teriary focus:text-black text-xs sm:text-sm focus-visible:bg-focusVisible sm:basis-28"
+                      className="text-white hover:bg-teriary focus:text-black text-sm focus-visible:bg-focusVisible sm:basis-28"
                       type="reset"
                     >
                       Reset to current date
                     </Button>
                   </div>
                 </FormControl>
-                <FormMessage className="sm:text-lg" />
+                <FormMessage className="text-lg" />
                 <br />
               </FormItem>
             )}

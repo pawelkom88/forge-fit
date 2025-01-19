@@ -9,7 +9,7 @@ import {
   doesWorkoutExistOnDate,
 } from "@/utils/helpers.ts";
 import { DATE_PATTERN } from "@/utils/constants.ts";
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage.ts";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { useFetch } from "@/hooks/useFetch.ts";
@@ -64,18 +64,17 @@ export default function Calendar() {
         <hr className="col-span-7" />
         <EmptyCells startDay={startDay} />
         {monthDays.map((day) => (
-          <>
+          <Fragment key={day.toISOString()}>
             {loading === "pending" ? (
               <Skeleton className="w-[33px] sm:w-[83px] sm:h-[80px] lg:w-[125px] xl:w-[191px] h-[33px]" />
             ) : (
               <WorkoutDetailsLink
                 data={data}
-                key={day.toISOString()}
                 monthDay={day}
                 currentMonth={currentMonth}
               />
             )}
-          </>
+          </Fragment>
         ))}
       </ol>
     </section>
