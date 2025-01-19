@@ -71,9 +71,9 @@ export function doesWorkoutExistOnDate(
 //   return weekDays;
 // }
 
-export function formatDate(date: Date) {
-  return date.toISOString().split("T")[0] as DateString;
-}
+// export function formatDate(date: Date) {
+//   return date.toISOString().split("T")[0] as DateString;
+// }
 
 function generateSurroundingWeekDays(workoutDate: Date) {
   return [

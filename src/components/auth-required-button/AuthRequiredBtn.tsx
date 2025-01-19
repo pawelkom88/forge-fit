@@ -24,7 +24,7 @@ export function AuthRequiredButton({ children, saveUserProgress }: Props) {
 
   return (
     <Button
-      className="w-full mt-2 text-contrastReversed hover:text-contrast hover:bg-contrastReversed border-2 border-contrast focus-visible:bg-yellow-500"
+      className="w-full mt-2 text-contrastReversed hover:text-contrast hover:bg-contrastReversed border-2 border-contrast focus-visible:bg-focusVisible"
       onClick={handleSave}
     >
       {isSaving ? (

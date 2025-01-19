@@ -119,7 +119,7 @@ export function WorkoutTracker({ workoutDetails, setWorkoutDetails }: Props) {
       <Dialog>
         <DialogTrigger asChild>
           <Button
-            className={`w-full bg-teriary text-white hover:bg-purple focus-visible:bg-yellow-500`}
+            className={`w-full bg-teriary text-white hover:bg-purple focus-visible:bg-focusVisible`}
           >
             <Plus className="mr-2 h-4 w-4" />
             Add Exercise
@@ -289,7 +289,7 @@ function WorkoutDetailsCard({ exercise, onAddSet }: WorkoutDetailsCardProps) {
               size="sm"
               className={`${
                 isLightTheme ? "bg-purple text-white" : "bg-white text-black"
-              }   hover:bg-black hover:text-white focus-visible:bg-yellow-500`}
+              }   hover:bg-black hover:text-white focus-visible:bg-focusVisible`}
             >
               <Plus className="mr-2 h-4 w-4" />
               Add Set

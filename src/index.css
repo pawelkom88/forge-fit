@@ -40,6 +40,7 @@
         --chart-4: 43 74% 66%;
         --chart-5: 27 87% 67%;
         --radius: 0.5rem;
+        --focus-visible: 40, 100%, 69%;
     }
 
     .dark {
@@ -87,7 +88,7 @@
     }
 
     *:focus-visible {
-        @apply outline-contrast bg-yellow-500 ring ring-contrast;
+        @apply outline-contrast bg-focusVisible ring ring-contrast;
     }
 }
 

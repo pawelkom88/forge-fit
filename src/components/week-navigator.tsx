@@ -9,7 +9,7 @@ export function WeekNavigator({ children }: { children: React.ReactNode }) {
           // onClick={() => setWeekAround()}
           aria-label="Previous days"
           className="hidden sm:block absolute -left-12 top-4 text-contrastReversed hover:text-contrast p-2 rounded-full hover:bg-background
-            hover:shadow-lg shadow-purple border hover:border hover:border-contrast bg-purple focus-visible:bg-yellow-500"
+            hover:shadow-lg shadow-purple border hover:border hover:border-contrast bg-purple focus-visible:bg-focusVisible"
         >
           <ChevronLeft aria-hidden="true" size={24} />
         </button>
@@ -18,7 +18,7 @@ export function WeekNavigator({ children }: { children: React.ReactNode }) {
           // onClick={() => setWeekAround()}
           aria-label="Next days"
           className="hidden sm:block absolute -right-12 top-4 text-contrastReversed hover:text-contrast p-2 rounded-full hover:bg-background
-            hover:shadow-lg shadow-purple border hover:border hover:border-contrast bg-purple focus-visible:bg-yellow-500"
+            hover:shadow-lg shadow-purple border hover:border hover:border-contrast bg-purple focus-visible:bg-focusVisible"
         >
           <ChevronRight aria-hidden="true" size={24} />
         </button>

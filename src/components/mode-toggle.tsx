@@ -16,7 +16,7 @@ export function ModeToggle() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          className="bg-accent focus-visible:bg-yellow-500 hover:bg-contrast hover:text-contrastReversed transition-colors duration-200"
+          className="bg-accent focus-visible:bg-focusVisible hover:bg-contrast hover:text-contrastReversed transition-colors duration-200"
           variant="outline"
           size="icon"
         >

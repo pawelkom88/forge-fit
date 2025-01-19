@@ -7,7 +7,6 @@ import {
   formatDateForScreenReaders,
   getWeekDays,
   doesWorkoutExistOnDate,
-  formatDate,
 } from "@/utils/helpers.ts";
 import { DATE_PATTERN } from "@/utils/constants.ts";
 import { useEffect, useRef } from "react";
@@ -23,7 +22,7 @@ export default function Calendar() {
     monthDays,
     goToPreviousMonth,
     goToNextMonth,
-    captureEnteredDate,
+    handleDateChange,
   } = useCalendar();
 
   return (
@@ -35,7 +34,7 @@ export default function Calendar() {
             aria-label="Previous month"
             onClick={goToPreviousMonth}
             className="text-contrastReversed hover:text-contrast p-2 rounded-full hover:bg-background
-            hover:shadow-lg shadow-purple border hover:border hover:border-contrast bg-purple focus-visible:bg-yellow-500"
+            hover:shadow-lg shadow-purple border hover:border hover:border-contrast bg-purple focus-visible:bg-focusVisible"
           >
             <ChevronLeft aria-hidden="true" size={24} />
           </button>
@@ -43,14 +42,13 @@ export default function Calendar() {
             aria-label="Next month"
             onClick={goToNextMonth}
             className="text-contrastReversed hover:text-contrast p-2 rounded-full hover:bg-background
-            hover:shadow-lg shadow-purple border hover:border hover:border-contrast bg-purple focus-visible:bg-yellow-500"
+            hover:shadow-lg shadow-purple border hover:border hover:border-contrast bg-purple focus-visible:bg-focusVisible"
           >
             <ChevronRight aria-hidden="true" size={24} />
           </button>
         </div>
       </div>
-      {/*// user enters date and that date should be focused in the calendar*/}
-      <WorkoutDateInput onDateChange={captureEnteredDate} />
+      <WorkoutDateInput onDateChange={handleDateChange} />
       <WorkoutLegend />
       <hr className="col-span-7" />
       <ol className="grid grid-cols-7 gap-4">
@@ -58,18 +56,30 @@ export default function Calendar() {
         <hr className="col-span-7" />
         <EmptyCells startDay={startDay} />
         {monthDays.map((day) => (
-          <WorkoutDetailsLink key={day.toISOString()} monthDay={day} />
+          <WorkoutDetailsLink
+            key={day.toISOString()}
+            monthDay={day}
+            currentMonth={currentMonth}
+          />
         ))}
       </ol>
     </section>
   );
 }
 
-function WorkoutDetailsLink({ monthDay }: { monthDay: Date }) {
+interface WorkoutDetailsLinkProps {
+  monthDay: Date;
+  currentMonth: Date;
+}
+
+function WorkoutDetailsLink({
+  monthDay,
+  currentMonth,
+}: WorkoutDetailsLinkProps) {
   const { data, loading, error } = useFetch<Workout[]>();
   const isWorkoutDay = doesWorkoutExistOnDate(data, monthDay);
   const linkRef = useRef(null);
-  const formatedDate = formatDate(monthDay);
+  const formatedDate = format(monthDay, DATE_PATTERN.YYYY_MM_DD);
   const formatedDateForScreenReaders = formatDateForScreenReaders(monthDay);
   const { value } = useLocalStorage("workoutDate", formatedDate);
   const today = new Date();
@@ -77,13 +87,16 @@ function WorkoutDetailsLink({ monthDay }: { monthDay: Date }) {
   const isPastWorkout = isBefore(monthDay, today) && isWorkoutDay;
 
   useEffect(() => {
-    if (value && linkRef.current) {
-      const linkElement = document.querySelector(`[data-date="${value}"]`);
+    const formatedCurrentMonth = format(currentMonth, DATE_PATTERN.YYYY_MM_DD);
+    if (data?.length && value && linkRef.current) {
+      const linkElement = document.querySelector(
+        `[data-date="${formatedCurrentMonth || value}"]`,
+      );
       if (linkElement instanceof HTMLElement) {
         linkElement.focus();
       }
     }
-  }, [value]);
+  }, [currentMonth, value, data?.length]);
 
   return (
     <>
@@ -97,11 +110,11 @@ function WorkoutDetailsLink({ monthDay }: { monthDay: Date }) {
           aria-label={`${isPastWorkout || isFutureWorkout ? `Workout details for ${formatedDateForScreenReaders} : ""` : `Enter to add workout for ${formatedDateForScreenReaders}`}`}
           to={`/workout/${formatedDate}`}
           className={`grid place-items-center
-        relative min-h-8 sm:min-h-20 p-1 sm:p-2 rounded-lg text-contrast hover:text-contrastReversed text-center
-        transition-colors duration-200 text-md sm:text-xl hover:bg-contrast focus-visible:bg-yellow-500
-        ${isToday(monthDay) ? "bg-teriary text-white font-bold" : ""}
-        ${isPastWorkout ? "bg-quaternary text-white" : ""}
-        ${isFutureWorkout ? "bg-quinary text-contrast" : ""}
+            relative min-h-8 sm:min-h-20 p-1 sm:p-2 rounded-lg text-contrast hover:text-contrastReversed text-center
+            transition-colors duration-200 text-md sm:text-xl hover:bg-contrast focus-visible:bg-focusVisible
+            ${isToday(monthDay) ? "bg-teriary text-white font-bold" : ""}
+            ${isPastWorkout ? "bg-quaternary text-white" : ""}
+            ${isFutureWorkout ? "bg-quinary text-contrast" : ""}
       `}
         >
           <time dateTime={formatedDate}>
@@ -156,8 +169,8 @@ function DayOfWeekLabels() {
       {getWeekDays().map((day) => {
         return (
           <abbr
-            title={formatDate(day)}
-            key={formatDate(day)}
+            title={format(day, DATE_PATTERN.YYYY_MM_DD)}
+            key={format(day, DATE_PATTERN.YYYY_MM_DD)}
             className="pt-4 text-center font-bold text-purple text-sm sm:text-base no-underline"
           >
             {format(day, DATE_PATTERN.ABBR3)}

@@ -4,18 +4,13 @@ import { DateString } from "@/utils/ts-helpers.ts";
 
 export function useCalendar() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [workoutDate, setWorkoutDate] = useState<DateString | "">("");
-  // use workoutDate to set currentMonth
-  const selectedWorkoutMonth = new Date(workoutDate);
-
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);
   const monthDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
   const startDay = getDay(monthStart);
 
-  const captureEnteredDate = (date: DateString) => {
-    setWorkoutDate(date);
-    // setCurrentMonth(new Date(workoutDate));
+  const handleDateChange = (date: DateString) => {
+    setCurrentMonth(new Date(date));
   };
 
   const goToPreviousMonth = () => {
@@ -38,6 +33,6 @@ export function useCalendar() {
     monthDays,
     goToPreviousMonth,
     goToNextMonth,
-    captureEnteredDate,
+    handleDateChange,
   };
 }

@@ -17,7 +17,6 @@ import { DATE_PATTERN } from "@/utils/constants.ts";
 import type { Workout } from "@/utils/workoutData.ts";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  formatDate,
   formatDateForScreenReaders,
   generateWeekDays,
 } from "@/utils/helpers.ts";
@@ -31,17 +30,14 @@ import { useFetch } from "@/hooks/useFetch.ts";
 export default function WorkoutDayPage() {
   const { workoutDate } = useParams() as { workoutDate: DateString };
   const { data, loading, error } = useFetch<Workout>(workoutDate);
-  // TODO: what to do with state ?
+  // TODO: what to do with state - move down to tracker - collect all and send to server ? ?
   const [workoutDetails, setWorkoutDetails] = useState<Workout | null>(data);
 
   return (
     <section className="bg-background container mx-auto pt-6  px-4 max-w-4xl">
       <WorkoutDayHeader workoutDate={workoutDate} />
       <WeekNavigator>
-        <WorkoutDayOverview
-          workout={data}
-          setWorkoutDetails={setWorkoutDetails}
-        />
+        <WorkoutDayOverview />
       </WeekNavigator>
       {error && <p>{error.message}</p>}
       {loading === "pending" ? (
@@ -118,60 +114,42 @@ function WorkoutDayTabs({ tracker, nutrition }: WorkoutDayNavigationProps) {
   );
 }
 
-interface WorkoutDayOverviewProps {
-  workout: Workout | null;
-  setWorkoutDetails: (workout: Workout | null) => void;
-}
-
-function WorkoutDayOverview({
-  workout,
-  setWorkoutDetails,
-}: WorkoutDayOverviewProps) {
+function WorkoutDayOverview() {
   const { data, loading, error } = useFetch<Workout[]>();
   const { workoutDate } = useParams() as { workoutDate: DateString };
   const { setValue } = useLocalStorage("workoutDate", workoutDate);
 
-  const handleDateChange = (selectedDate: DateString) => {
-    setWorkoutDetails(workout ?? null);
-    setValue(selectedDate);
-  };
+  useEffect(() => {
+    setValue(workoutDate);
+  }, [workoutDate, setValue]);
 
   return (
     <>
       {error && <p>{error.message}</p>}
       {loading === "pending" ? (
-        <div className="col-[1/-1] px-4 flex gap-2">
-          <Skeleton className="w-[116px] h-[64px]" />
-          <Skeleton className="w-[116px] h-[64px]" />
-          <Skeleton className="w-[116px] h-[64px]" />
-          <Skeleton className="w-[116px] h-[64px]" />
-          <Skeleton className="w-[116px] h-[64px]" />
-          <Skeleton className="w-[116px] h-[64px]" />
-          <Skeleton className="w-[116px] h-[64px]" />
-        </div>
+        <WorkoutDayOverviewSkeleton />
       ) : (
         <>
           {generateWeekDays(new Date(workoutDate), data).map(
             ({ date, isWorkoutDay }) => {
               const today = new Date();
-              const formatedDate = formatDate(date);
+              const formatedDate = format(date, DATE_PATTERN.YYYY_MM_DD);
               const isSelectedDate = workoutDate === formatedDate;
               const isFutureWorkout = isAfter(date, today) && isWorkoutDay;
               const isPastWorkout = isBefore(date, today) && isWorkoutDay;
 
               return (
                 <Link
-                  onClick={() => handleDateChange(formatedDate)}
                   aria-label={`${formatDateForScreenReaders(date)}`}
                   to={`/workout/${formatedDate}`}
                   key={date.toISOString()}
                   className={`sm:p-2 rounded-lg hover:bg-contrast hover:text-contrastReversed
-              ${isSelectedDate ? "bg-teriary font-bold hover:bg-teriary text-contrastReversed" : "text-contrast"}
+                  ${isSelectedDate ? "bg-teriary font-bold hover:bg-teriary text-contrastReversed" : "text-contrast"}
               `}
                 >
                   <div
                     className={`text-sm ${!isSelectedDate && isPastWorkout ? "bg-quaternary text-white" : ""}
-                ${!isSelectedDate && isFutureWorkout ? "bg-quinary text-black" : ""}`}
+                    ${!isSelectedDate && isFutureWorkout ? "bg-quinary text-black" : ""}`}
                   >
                     {format(date, DATE_PATTERN.ABBR3)}
                   </div>
@@ -187,5 +165,19 @@ function WorkoutDayOverview({
         </>
       )}
     </>
+  );
+}
+
+function WorkoutDayOverviewSkeleton() {
+  return (
+    <div className="col-[1/-1] px-4 flex gap-2">
+      <Skeleton className="w-[116px] h-[64px]" />
+      <Skeleton className="w-[116px] h-[64px]" />
+      <Skeleton className="w-[116px] h-[64px]" />
+      <Skeleton className="w-[116px] h-[64px]" />
+      <Skeleton className="w-[116px] h-[64px]" />
+      <Skeleton className="w-[116px] h-[64px]" />
+      <Skeleton className="w-[116px] h-[64px]" />
+    </div>
   );
 }

@@ -19,6 +19,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { DateString } from "@/utils/ts-helpers.ts";
@@ -103,7 +104,7 @@ export function WorkoutDateInput({
                     type="text"
                     maxLength={10}
                     placeholder="Enter workout date in YYYY-MM-DD format"
-                    className="max-w-80 h-12 p-2 mb-8 focus-visible:bg-yellow-500 focus-visible:placeholder:text-black placeholder:text-sm"
+                    className="max-w-80 h-12 p-2 mb-8 focus-visible:bg-focusVisible focus-visible:placeholder:text-black placeholder:text-sm"
                     value={field.value}
                     onChange={(e) => {
                       const formattedValue = handleInputChange(e.target.value);
@@ -134,13 +135,14 @@ function Alert({ onShowAlert }: { onShowAlert: () => void }) {
       </AlertDialogTrigger>
       <AlertDialogContent className="max-w-[350px] rounded sm:max-w-[500px]">
         <AlertDialogHeader>
-          {/*<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>*/}
-          <AlertDialogDescription className="text-black text-lg text-center text-balance">
+          <AlertDialogTitle>How it works ?</AlertDialogTitle>
+          <AlertDialogDescription className="text-black text-lg text-pretty">
             Enter the date in YYYY-MM-DD format. After inputting the date, press{" "}
             <kbd className="bg-gray-200 rounded px-1 py-0.5 text-sm font-mono border border-gray-400 shadow-sm">
               Enter
             </kbd>{" "}
-            key and the date will be searched in the calendar below.
+            key and the date will be searched in the calendar below. Dashes are
+            applied automatically.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

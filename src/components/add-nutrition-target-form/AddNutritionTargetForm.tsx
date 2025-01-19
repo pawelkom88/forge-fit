@@ -18,7 +18,7 @@ export function AddNutritionTargetForm() {
     <Dialog>
       <DialogTrigger asChild>
         <Button
-          className={`w-full bg-teriary text-white ${isLightTheme ? "hover:bg-primary " : "hover:bg-white hover:text-black"} focus-visible:bg-yellow-500`}
+          className={`w-full bg-teriary text-white ${isLightTheme ? "hover:bg-primary " : "hover:bg-white hover:text-black"} focus-visible:bg-focusVisible`}
         >
           <Settings aria-hidden="true" className="mr-2 h-4 w-4" />
           {/*TODO: can be either set or change nutrution targets based on if data is available from DB*/}

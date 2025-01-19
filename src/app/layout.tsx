@@ -13,7 +13,7 @@ export default function App() {
           </div>
           <Button
             size="icon"
-            className="bg-accent focus-visible:bg-yellow-500 hover:bg-contrast hover:text-contrastReversed transition-colors duration-200"
+            className="bg-accent focus-visible:bg-focusVisible hover:bg-contrast hover:text-contrastReversed transition-colors duration-200"
             variant="outline"
             aria-label="user settings"
           >
