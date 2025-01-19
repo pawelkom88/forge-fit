@@ -21,10 +21,11 @@ import {
   AlertDialogHeader,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { DateString } from "@/utils/ts-helpers.ts";
 
 const formSchema = z.object({
   workoutDate: z
-    .string()
+    .custom<DateString | "">()
     .refine(
       (date) => {
         const [, month] = date.split("-").map(Number);
@@ -55,7 +56,11 @@ const formSchema = z.object({
 
 // TODO: add a lot of tests
 
-export function WorkoutDateInput() {
+export function WorkoutDateInput({
+  onDateChange,
+}: {
+  onDateChange: (date: DateString) => void;
+}) {
   const [overlay, setOverlay] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,7 +78,9 @@ export function WorkoutDateInput() {
   };
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    if (values.workoutDate) {
+      onDateChange(values.workoutDate);
+    }
   };
 
   return (

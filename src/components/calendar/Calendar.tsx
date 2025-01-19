@@ -23,6 +23,7 @@ export default function Calendar() {
     monthDays,
     goToPreviousMonth,
     goToNextMonth,
+    captureEnteredDate,
   } = useCalendar();
 
   return (
@@ -49,7 +50,7 @@ export default function Calendar() {
         </div>
       </div>
       {/*// user enters date and that date should be focused in the calendar*/}
-      <WorkoutDateInput />
+      <WorkoutDateInput onDateChange={captureEnteredDate} />
       <WorkoutLegend />
       <hr className="col-span-7" />
       <ol className="grid grid-cols-7 gap-4">
