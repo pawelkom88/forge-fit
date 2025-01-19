@@ -17,7 +17,6 @@ import { DATE_PATTERN } from "@/utils/constants.ts";
 import type { Workout } from "@/utils/workoutData.ts";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  doesWorkoutExistOnDate,
   formatDate,
   formatDateForScreenReaders,
   generateWeekDays,
@@ -111,7 +110,9 @@ function WorkoutDayTabs({ tracker, nutrition }: WorkoutDayNavigationProps) {
           Nutrition
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="workout">{tracker}</TabsContent>
+      <TabsContent tabIndex={-1} value="workout">
+        {tracker}
+      </TabsContent>
       <TabsContent value="nutrition">{nutrition}</TabsContent>
     </Tabs>
   );
@@ -137,6 +138,7 @@ function WorkoutDayOverview({
 
   return (
     <>
+      {error && <p>{error.message}</p>}
       {loading === "pending" ? (
         <div className="col-[1/-1] px-4 flex gap-2">
           <Skeleton className="w-[116px] h-[64px]" />

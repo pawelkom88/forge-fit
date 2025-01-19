@@ -89,7 +89,7 @@ function generateSurroundingWeekDays(workoutDate: Date) {
 
 export function generateWeekDays(
   workoutDate: Date,
-  workouts: Workout[],
+  workouts: Workout[] | null,
 ): WeekDayWithWorkoutStatus[] {
   return generateSurroundingWeekDays(workoutDate).map((weekDay) => ({
     date: weekDay,
