@@ -23,79 +23,88 @@ import { commonExercises, Exercise, Workout } from "@/utils/workoutData.ts";
 import { muscleGroups } from "@/utils/constants.ts";
 
 interface Props {
-  workout: Workout | null;
-  setWorkout: (workout: Workout | null) => void;
+  workoutDetails: Workout | null;
+  setWorkoutDetails: (workout: Workout | null) => void;
 }
 
-export function WorkoutTracker({ workout, setWorkout }: Props) {
+export function WorkoutTracker({ workoutDetails, setWorkoutDetails }: Props) {
   const { isLightTheme } = useTheme();
   const [newExercise, setNewExercise] = useState<Exercise>({
+    name: "",
     exerciseId: "",
+    // type muscle group - union
     muscleGroup: "",
-    sets: [{ setId: "set1", weight: 0, reps: 0, setOrder: 0 }],
+    sets: [{ setId: "set1", weight: 0, reps: 0 }],
   });
 
-  const addExercise = () => {
-    if (newExercise.exerciseId && newExercise.muscleGroup) {
-      setWorkout((prev) => ({
-        ...prev,
-        exercises: [
-          ...prev.exercises,
-          { ...newExercise, id: Date.now().toString() },
-        ],
-      }));
-      setNewExercise({
-        exerciseId: "",
-        muscleGroup: "",
-        sets: [{ setId: "set1", weight: 0, reps: 0, setOrder: 0 }],
-      });
-    }
-  };
+  // const addExercise = () => {
+  //   if (newExercise.exerciseId) {
+  //     setWorkoutDetails((workout) => ({
+  //       ...workout,
+  //       exercises: [
+  //         ...workout.exercises,
+  //         // todo: get unique id for set maybe react ID hook ?
+  //         { ...newExercise, id: Date.now().toString() },
+  //       ],
+  //     }));
+  //
+  //     setNewExercise({
+  //       name: "",
+  //       exerciseId: "",
+  //       muscleGroup: "",
+  //       // todo: get unique id for set maybe react ID hook ?
+  //       sets: [{ setId: "set1", weight: 0, reps: 0 }],
+  //     });
+  //   }
+  // };
 
   const addSet = (exerciseId: string) => {
-    setWorkout((prev) => ({
-      ...prev,
-      exercises: prev.exercises.map((ex) =>
-        ex.exerciseId === exerciseId
-          ? { ...ex, sets: [...ex.sets, { weight: 0, reps: 0 }] }
-          : ex,
-      ),
-    }));
+    console.log(exerciseId);
+    // setWorkoutDetails((workout) => {
+    //   return {
+    //     ...workout,
+    //     exercises: workout.exercises.map((exercise: Exercise) =>
+    //       exercise.exerciseId === exerciseId
+    //         ? { ...exercise, sets: [...exercise.sets, { weight: 0, reps: 0 }] }
+    //         : exercise,
+    //     ),
+    //   };
+    // });
   };
 
-  const updateSet = (
-    exerciseId: string,
-    setIndex: number,
-    field: "weight" | "reps",
-    value: number,
-  ) => {
-    setWorkout((prev) => ({
-      ...prev,
-      exercises: prev.exercises.map((ex) =>
-        ex.exerciseId === exerciseId
-          ? {
-              ...ex,
-              sets: ex.sets.map((set, idx) =>
-                idx === setIndex ? { ...set, [field]: value } : set,
-              ),
-            }
-          : ex,
-      ),
-    }));
-  };
-  {
-    /*TODO: separate component / idealy exercise name and accordion that closes automatically when other opens*/
-  }
+  // const updateSet = (
+  //   exerciseId: string,
+  //   setIndex: number,
+  //   field: "weight" | "reps",
+  //   value: number,
+  // ) => {
+  //   setWorkoutDetails((prev) => ({
+  //     ...prev,
+  //     exercises: prev.exercises.map((exercise) =>
+  //       exercise.exerciseId === exerciseId
+  //         ? {
+  //             ...exercise,
+  //             sets: exercise.sets.map((set, idx) =>
+  //               idx === setIndex ? { ...set, [field]: value } : set,
+  //             ),
+  //           }
+  //         : exercise,
+  //     ),
+  //   }));
+  // };
+  //
+
+  /*TODO: separate component / idealy exercise name and accordion that closes automatically when other opens*/
 
   return (
     <>
-      {!workout?.exercises?.length ? (
+      {!workoutDetails?.exercises?.length ? (
         <h1 className="text-center my-4 text-pretty">
           You have not added any exercise yet. Click button below to add one.
         </h1>
       ) : (
         <>
-          {workout?.exercises?.map((exercise) => (
+          {workoutDetails?.exercises?.map((exercise) => (
             <Card className="my-2" key={exercise.exerciseId}>
               <CardHeader>
                 <CardTitle>{exercise.exerciseId}</CardTitle>
@@ -110,13 +119,14 @@ export function WorkoutTracker({ workout, setWorkout }: Props) {
                       <Input
                         type="number"
                         value={set.weight}
-                        onChange={(e) =>
-                          updateSet(
-                            exercise.exerciseId,
-                            setIndex,
-                            "weight",
-                            Number(e.target.value),
-                          )
+                        onChange={
+                          (e) => console.log("updating set")
+                          // updateSet(
+                          //   exercise.exerciseId,
+                          //   setIndex,
+                          //   "weight",
+                          //   Number(e.target.value),
+                          // )
                         }
                         placeholder="Weight"
                         className="w-20"
@@ -125,13 +135,14 @@ export function WorkoutTracker({ workout, setWorkout }: Props) {
                       <Input
                         type="number"
                         value={set.reps}
-                        onChange={(e) =>
-                          updateSet(
-                            exercise.exerciseId,
-                            setIndex,
-                            "reps",
-                            Number(e.target.value),
-                          )
+                        onChange={
+                          (e) => console.log("updating set")
+                          // updateSet(
+                          //   exercise.exerciseId,
+                          //   setIndex,
+                          //   "reps",
+                          //   Number(e.target.value),
+                          // )
                         }
                         placeholder="Reps"
                         className="w-20"
@@ -225,14 +236,14 @@ export function WorkoutTracker({ workout, setWorkout }: Props) {
               </Select>
             </div>
           </div>
-          <Button
-            className={`${
-              isLightTheme ? "bg-purple" : "bg-white"
-            } ${isLightTheme ? "text-white" : "text-black"}`}
-            onClick={addExercise}
-          >
-            Add Exercise
-          </Button>
+          {/*<Button*/}
+          {/*  className={`${*/}
+          {/*    isLightTheme ? "bg-purple" : "bg-white"*/}
+          {/*  } ${isLightTheme ? "text-white" : "text-black"}`}*/}
+          {/*  onClick={addExercise}*/}
+          {/*>*/}
+          {/*  Add Exercise*/}
+          {/*</Button>*/}
         </DialogContent>
       </Dialog>
     </>

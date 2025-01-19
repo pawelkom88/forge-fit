@@ -2,7 +2,7 @@ import { format, isAfter, isBefore, isToday } from "date-fns";
 import { ChevronLeft, ChevronRight, Circle } from "lucide-react";
 import { useCalendar } from "@/hooks/useCalendar.tsx";
 import { WorkoutDateInput } from "@/components/workout-date-input/WorkoutDateInput.tsx";
-import { Link, useLoaderData } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   formatDateForScreenReaders,
   getWeekDays,
@@ -12,6 +12,9 @@ import {
 import { DATE_PATTERN } from "@/utils/constants.ts";
 import { useEffect, useRef } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage.ts";
+import { Skeleton } from "@/components/ui/skeleton.tsx";
+import { useFetch } from "@/hooks/useFetch.ts";
+import { Workout } from "@/utils/workoutData.ts";
 
 export default function Calendar() {
   const {
@@ -66,8 +69,8 @@ interface DayButtonProps {
 }
 
 function WorkoutDetailsLink({ monthDay }: DayButtonProps) {
-  const workouts = useLoaderData();
-  const isWorkoutDay = doesWorkoutExistOnDate(workouts, monthDay);
+  const { data, loading, error } = useFetch<Workout[]>();
+  const isWorkoutDay = doesWorkoutExistOnDate(data, monthDay);
   const linkRef = useRef(null);
   const formatedDate = formatDate(monthDay);
   const formatedDateForScreenReaders = formatDateForScreenReaders(monthDay);
@@ -86,21 +89,30 @@ function WorkoutDetailsLink({ monthDay }: DayButtonProps) {
   }, []);
 
   return (
-    <Link
-      data-date={formatedDate}
-      ref={linkRef}
-      aria-label={`${isPastWorkout || isFutureWorkout ? `Workout details for ${formatedDateForScreenReaders} : ""` : `Enter to add workout for ${formatedDateForScreenReaders}`}`}
-      to={`/workout/${formatedDate}`}
-      className={`grid place-items-center
+    <>
+      {error && <p>{error.message}</p>}
+      {loading === "pending" ? (
+        <Skeleton className="w-[33px] sm:w-[83px] sm:h-[80px] lg:w-[125px] xl:w-[191px] h-[33px]" />
+      ) : (
+        <Link
+          data-date={formatedDate}
+          ref={linkRef}
+          aria-label={`${isPastWorkout || isFutureWorkout ? `Workout details for ${formatedDateForScreenReaders} : ""` : `Enter to add workout for ${formatedDateForScreenReaders}`}`}
+          to={`/workout/${formatedDate}`}
+          className={`grid place-items-center
         relative min-h-8 sm:min-h-20 p-1 sm:p-2 rounded-lg text-contrast hover:text-contrastReversed text-center
         transition-colors duration-200 text-md sm:text-xl hover:bg-contrast focus-visible:bg-yellow-500
         ${isToday(monthDay) ? "bg-teriary text-white font-bold" : ""}
         ${isPastWorkout ? "bg-quaternary text-white" : ""}
         ${isFutureWorkout ? "bg-quinary text-contrast" : ""}
       `}
-    >
-      <time dateTime={formatedDate}>{format(monthDay, DATE_PATTERN.DAY)}</time>
-    </Link>
+        >
+          <time dateTime={formatedDate}>
+            {format(monthDay, DATE_PATTERN.DAY)}
+          </time>
+        </Link>
+      )}
+    </>
   );
 }
 

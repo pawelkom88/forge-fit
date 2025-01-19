@@ -2,12 +2,12 @@ export interface Set {
   setId: string;
   weight: number;
   reps: number;
-  setOrder: number;
 }
 
 export interface Exercise {
+  name: string;
   exerciseId: string;
-  order: number;
+  muscleGroup: string;
   sets: Set[];
 }
 

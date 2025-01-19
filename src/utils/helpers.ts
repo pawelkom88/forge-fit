@@ -54,7 +54,10 @@ export type WeekDayWithWorkoutStatus = {
   isWorkoutDay: boolean;
 };
 
-export function doesWorkoutExistOnDate(workouts: Workout[], weekDay: Date) {
+export function doesWorkoutExistOnDate(
+  workouts: Workout[] | null,
+  weekDay: Date,
+) {
   return workouts?.some((workout) =>
     isSameDay(new Date(workout.date), weekDay),
   );

@@ -9,12 +9,7 @@ import {
 import { WeekNavigator } from "@/components/week-navigator.tsx";
 import { WorkoutTracker } from "@/components/workout-tracker.tsx";
 import { NutritionTracker } from "@/components/nutrition-tracker.tsx";
-import {
-  Link,
-  useLoaderData,
-  useNavigation,
-  useParams,
-} from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { DateString } from "@/utils/ts-helpers.ts";
 import { useTheme } from "@/components/theme-provider.tsx";
 import { RoutesConfig } from "@/routing/routes.tsx";
@@ -28,27 +23,27 @@ import {
 } from "@/utils/helpers.ts";
 import { useLocalStorage } from "@/hooks/useLocalStorage.ts";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useFetch } from "@/hooks/useFetch.ts";
 
 // TODO: add skip to main content - id already set to workout
 // todo: extract key to variable and reuse ?
 
 export default function WorkoutDayPage() {
-  const workout = useLoaderData();
-  const { state } = useNavigation();
-
-  const [workoutDetails, setWorkoutDetails] = useState<Workout | null>(workout);
+  const { workoutDate } = useParams() as { workoutDate: DateString };
+  const { data, loading, error } = useFetch<Workout>(workoutDate);
+  const [workoutDetails, setWorkoutDetails] = useState<Workout | null>(data);
 
   return (
     <section className="bg-background container mx-auto pt-6  px-4 max-w-4xl">
-      <WorkoutDayHeader />
+      <WorkoutDayHeader workoutDate={workoutDate} />
       <WeekNavigator>
         <WorkoutDayOverview
           workout={workoutDetails}
           setWorkoutDetails={setWorkoutDetails}
         />
       </WeekNavigator>
-
-      {state === "loading" ? (
+      {error && <p>{error.message}</p>}
+      {loading === "pending" ? (
         <div className="px-2">
           <Skeleton className="w-full h-[36px] mt-6" />
           <Skeleton className="w-full h-[226px] my-2" />
@@ -56,7 +51,10 @@ export default function WorkoutDayPage() {
       ) : (
         <WorkoutDayTabs
           tracker={
-            <WorkoutTracker workout={workout} setWorkout={setWorkoutDetails} />
+            <WorkoutTracker
+              workoutDetails={data}
+              setWorkoutDetails={setWorkoutDetails}
+            />
           }
           nutrition={<NutritionTracker />}
         />
@@ -65,8 +63,7 @@ export default function WorkoutDayPage() {
   );
 }
 
-function WorkoutDayHeader() {
-  const { workoutDate } = useParams() as { workoutDate: DateString };
+function WorkoutDayHeader({ workoutDate }: { workoutDate: DateString }) {
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
