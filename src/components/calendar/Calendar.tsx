@@ -16,6 +16,8 @@ import { useFetch } from "@/hooks/useFetch.ts";
 import { Workout } from "@/utils/workoutData.ts";
 
 export default function Calendar() {
+  const { value } = useLocalStorage("workoutDate", null);
+  console.log(value);
   const {
     startDay,
     currentMonth,
@@ -23,7 +25,7 @@ export default function Calendar() {
     goToPreviousMonth,
     goToNextMonth,
     handleDateChange,
-  } = useCalendar();
+  } = useCalendar(value);
 
   return (
     <section className="bg-foreground rounded-lg p-2 sm:p-4 flex flex-col border">

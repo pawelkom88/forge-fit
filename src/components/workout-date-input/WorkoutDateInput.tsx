@@ -23,6 +23,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { DateString } from "@/utils/ts-helpers.ts";
+import { Button } from "@/components/ui/button.tsx";
 
 const formSchema = z.object({
   workoutDate: z
@@ -60,7 +61,7 @@ const formSchema = z.object({
 export function WorkoutDateInput({
   onDateChange,
 }: {
-  onDateChange: (date: DateString) => void;
+  onDateChange: (date: Date) => void;
 }) {
   const [overlay, setOverlay] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -80,7 +81,7 @@ export function WorkoutDateInput({
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     if (values.workoutDate) {
-      onDateChange(values.workoutDate);
+      onDateChange(new Date(values.workoutDate));
     }
   };
 
@@ -98,26 +99,36 @@ export function WorkoutDateInput({
                   <Alert onShowAlert={() => setOverlay(!overlay)} />
                 </div>
                 <FormControl>
-                  <Input
-                    {...field}
-                    id="workout-date"
-                    type="text"
-                    maxLength={10}
-                    placeholder="Enter workout date in YYYY-MM-DD format"
-                    className="max-w-80 h-12 p-2 mb-8 focus-visible:bg-focusVisible focus-visible:placeholder:text-black placeholder:text-sm"
-                    value={field.value}
-                    onChange={(e) => {
-                      const formattedValue = handleInputChange(e.target.value);
-                      field.onChange(formattedValue);
-                    }}
-                  />
+                  <div className="flex gap-2">
+                    <Input
+                      {...field}
+                      id="workout-date"
+                      type="text"
+                      maxLength={10}
+                      placeholder="Enter workout date in YYYY-MM-DD format"
+                      className="max-w-80 h-12 p-2 mb-8 focus-visible:bg-focusVisible focus-visible:placeholder:text-black placeholder:text-sm"
+                      value={field.value}
+                      onChange={(e) => {
+                        const formattedValue = handleInputChange(
+                          e.target.value,
+                        );
+                        field.onChange(formattedValue);
+                      }}
+                    />
+                    <Button
+                      onClick={() => onDateChange(new Date())}
+                      className="h-[48px] text-white hover:bg-teriary focus:text-black focus-visible:bg-focusVisible"
+                      type="reset"
+                    >
+                      Reset
+                    </Button>
+                  </div>
                 </FormControl>
                 <FormMessage className="sm:text-lg" />
                 <br />
               </FormItem>
             )}
           />
-          {/*<Button type="submit">Submit</Button>*/}
         </form>
       </Form>
     </>

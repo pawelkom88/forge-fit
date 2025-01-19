@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { eachDayOfInterval, endOfMonth, getDay, startOfMonth } from "date-fns";
-import { DateString } from "@/utils/ts-helpers.ts";
 
-export function useCalendar() {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
+export function useCalendar(date: Date) {
+  const [currentMonth, setCurrentMonth] = useState(
+    date ? new Date(date) : new Date(),
+  );
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);
   const monthDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
   const startDay = getDay(monthStart);
 
-  const handleDateChange = (date: DateString) => {
-    setCurrentMonth(new Date(date));
+  const handleDateChange = (date: Date) => {
+    setCurrentMonth(date);
   };
 
   const goToPreviousMonth = () => {
@@ -34,5 +35,6 @@ export function useCalendar() {
     goToPreviousMonth,
     goToNextMonth,
     handleDateChange,
+    setCurrentMonth,
   };
 }
