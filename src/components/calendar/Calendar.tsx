@@ -90,7 +90,7 @@ function WorkoutDetailsLink({
 
   useEffect(() => {
     const formatedCurrentMonth = format(currentMonth, DATE_PATTERN.YYYY_MM_DD);
-    if (data?.length && value && linkRef.current) {
+    if (data?.length && linkRef.current) {
       const linkElement = document.querySelector(
         `[data-date="${formatedCurrentMonth || value}"]`,
       );
@@ -130,7 +130,7 @@ function WorkoutDetailsLink({
 
 export function WorkoutLegend({ isSelectedDate = false }) {
   return (
-    <dl className="text-purple flex gap-2 mb-8">
+    <dl className="text-purple flex items-center gap-2 mb-8 text-xs sm:text-lg">
       <dt>
         <Circle strokeWidth={1} fill="hsl(180, 100%, 29%)" aria-hidden="true" />
       </dt>

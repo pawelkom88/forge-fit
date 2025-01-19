@@ -106,7 +106,7 @@ export function WorkoutDateInput({
                       type="text"
                       maxLength={10}
                       placeholder="Enter workout date in YYYY-MM-DD format"
-                      className="max-w-80 h-12 p-2 mb-8 focus-visible:bg-focusVisible focus-visible:placeholder:text-black placeholder:text-sm"
+                      className=" h-12 p-2 mb-8 focus-visible:bg-focusVisible focus-visible:placeholder:text-black placeholder:text-sm sm:basis-72"
                       value={field.value}
                       onChange={(e) => {
                         const formattedValue = handleInputChange(
@@ -117,10 +117,10 @@ export function WorkoutDateInput({
                     />
                     <Button
                       onClick={() => onDateChange(new Date())}
-                      className="h-[48px] text-white hover:bg-teriary focus:text-black focus-visible:bg-focusVisible"
+                      className="h-[48px] text-white hover:bg-teriary focus:text-black text-xs sm:text-sm focus-visible:bg-focusVisible sm:basis-28"
                       type="reset"
                     >
-                      Reset
+                      Reset to current date
                     </Button>
                   </div>
                 </FormControl>
