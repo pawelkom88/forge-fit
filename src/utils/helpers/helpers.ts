@@ -1,6 +1,5 @@
 import { Theme, THEME_CONFIG } from "@/components/theme-provider.tsx";
 import { addDays, isSameDay, startOfWeek, subDays } from "date-fns";
-import { DateString } from "@/utils/ts-helpers.ts";
 import { Workout } from "@/utils/workoutData.ts";
 
 export function removeThemeClasses(
@@ -26,9 +25,10 @@ export function setRootThemeFromSystemPreference(
   }
 }
 
-export function getWeekDays(workoutDate: Date | DateString = new Date()) {
-  const weekStart = startOfWeek(workoutDate);
-  return Array.from({ length: 7 }).map((_, i) => addDays(weekStart, i));
+export function getWeekDays(): Date[] {
+  return Array.from({ length: 7 }).map((_, i) =>
+    addDays(startOfWeek(new Date()), i),
+  );
 }
 
 export const defaultOptions = {
@@ -41,7 +41,7 @@ export function formatDateForScreenReaders(
   date: Date,
   language = "en-GB",
   options = defaultOptions,
-) {
+): string {
   return new Intl.DateTimeFormat(language, options).format(date);
 }
 
@@ -53,13 +53,13 @@ export type WeekDayWithWorkoutStatus = {
 export function doesWorkoutExistOnDate(
   workouts: Workout[] | null,
   weekDay: Date,
-) {
+): boolean | undefined {
   return workouts?.some((workout) =>
     isSameDay(new Date(workout.date), weekDay),
   );
 }
 
-function generateSurroundingWeekDays(workoutDate: Date) {
+export function generateSurroundingWeekDays(workoutDate: Date): Date[] {
   return [
     ...Array(3)
       .fill(0)
