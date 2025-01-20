@@ -1,10 +1,10 @@
 import { Theme, THEME_CONFIG } from "@/components/theme-provider.tsx";
-import { isSameDay, addDays, startOfWeek, subDays } from "date-fns";
+import { addDays, isSameDay, startOfWeek, subDays } from "date-fns";
 import { DateString } from "@/utils/ts-helpers.ts";
 import { Workout } from "@/utils/workoutData.ts";
 
 export function removeThemeClasses(
-  themes: typeof THEME_CONFIG,
+  themes: keyof typeof THEME_CONFIG,
   rootElement: HTMLElement,
 ): void {
   if (!rootElement) return;
@@ -28,11 +28,7 @@ export function setRootThemeFromSystemPreference(
 
 export function getWeekDays(workoutDate: Date | DateString = new Date()) {
   const weekStart = startOfWeek(workoutDate);
-  const weekDays = Array.from({ length: 7 }).map((_, i) =>
-    addDays(weekStart, i),
-  );
-
-  return weekDays;
+  return Array.from({ length: 7 }).map((_, i) => addDays(weekStart, i));
 }
 
 export const defaultOptions = {
@@ -62,18 +58,6 @@ export function doesWorkoutExistOnDate(
     isSameDay(new Date(workout.date), weekDay),
   );
 }
-
-// export function generateWeekDays(workoutDate: Date): Date[] {
-//   const weekDays: Date[] = [];
-//   for (let i = -3; i <= 3; i++) {
-//     weekDays.push(addDays(workoutDate, i));
-//   }
-//   return weekDays;
-// }
-
-// export function formatDate(date: Date) {
-//   return date.toISOString().split("T")[0] as DateString;
-// }
 
 function generateSurroundingWeekDays(workoutDate: Date) {
   return [

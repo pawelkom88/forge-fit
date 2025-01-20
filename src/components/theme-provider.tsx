@@ -3,7 +3,7 @@ import { Union } from "@/utils/ts-helpers.ts";
 import {
   removeThemeClasses,
   setRootThemeFromSystemPreference,
-} from "@/utils/helpers.ts";
+} from "@/utils/helpers/helpers.ts";
 
 export const UI_THEME = "ui-theme";
 

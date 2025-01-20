@@ -154,4 +154,39 @@ export const workouts: Workout[] = [
       },
     ],
   },
+  {
+    workoutId: "5",
+    userId: "user123asdasdasdasda",
+    date: new Date(2025, 0, 26),
+    notes: "2312312312",
+    exercises: [
+      {
+        exerciseId: "1",
+        muscleGroup: "Chest",
+        name: "Bench Press",
+        sets: [
+          { setId: "set1", weight: 120, reps: 10 },
+          { setId: "set2", weight: 130, reps: 8 },
+        ],
+      },
+      {
+        exerciseId: "2",
+        muscleGroup: "Legs",
+        name: "Squats",
+        sets: [
+          { setId: "set1", weight: 0, reps: 10 },
+          { setId: "set2", weight: 0, reps: 8 },
+        ],
+      },
+      {
+        exerciseId: "3",
+        muscleGroup: "Chest",
+        name: "Bench Press",
+        sets: [
+          { setId: "set1", weight: 0, reps: 15 },
+          { setId: "set2", weight: 0, reps: 15 },
+        ],
+      },
+    ],
+  },
 ];

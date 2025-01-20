@@ -7,7 +7,7 @@ import {
   formatDateForScreenReaders,
   getWeekDays,
   doesWorkoutExistOnDate,
-} from "@/utils/helpers.ts";
+} from "@/utils/helpers/helpers.ts";
 import { DATE_PATTERN } from "@/utils/constants.ts";
 import { Fragment, useEffect, useRef } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage.ts";
@@ -18,7 +18,6 @@ import { ErrorAlert } from "@/components/alert/Alert.tsx";
 
 export default function Calendar() {
   const { data, loading, error } = useFetch<Workout[]>();
-
   const { value } = useLocalStorage("workoutDate", null);
   const {
     startDay,

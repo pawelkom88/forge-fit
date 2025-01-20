@@ -19,7 +19,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   formatDateForScreenReaders,
   generateWeekDays,
-} from "@/utils/helpers.ts";
+} from "@/utils/helpers/helpers.ts";
 import { useLocalStorage } from "@/hooks/useLocalStorage.ts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useFetch } from "@/hooks/useFetch.ts";
