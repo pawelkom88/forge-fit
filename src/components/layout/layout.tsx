@@ -1,7 +1,8 @@
 import Calendar from "@/components/calendar/Calendar.tsx";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import { SettingsIcon } from "lucide-react";
-import { Button } from "@/components/ui/button.tsx";
+import { Link } from "react-router-dom";
+import { RoutesConfig } from "@/routing/routes.tsx";
 
 export default function App() {
   return (
@@ -11,14 +12,14 @@ export default function App() {
           <div className="mb-2 flex-grow">
             <h1 className="text-2xl sm:text-3xl font-bold">Workout Calendar</h1>
           </div>
-          <Button
-            size="icon"
-            className="bg-accent focus-visible:bg-focusVisible hover:bg-contrast hover:text-contrastReversed transition-colors duration-200"
-            variant="outline"
-            aria-label="user settings"
+          <Link
+            to={`${RoutesConfig.userProfile.path}`}
+            className="h-9 w-9 flex items-center justify-center rounded border border-input shadow-sm
+            hover:bg-contrast hover:text-contrastReversed bg-accent focus-visible:bg-focusVisible transition-colors duration-200"
+            aria-label="user profile page"
           >
-            <SettingsIcon className="h-[1.2rem] w-[1.2rem]" />
-          </Button>
+            <SettingsIcon size={18} aria-hidden="true" />
+          </Link>
           <ModeToggle />
         </div>
         <p className="my-2">Track your gym sessions and nutrition</p>
