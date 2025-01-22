@@ -67,11 +67,11 @@ const formSchema = z.object({
 
 // TODO: add a lot of tests
 
-export function WorkoutDateInput({
-  onDateChange,
-}: {
+interface WorkoutDateFormProps {
   onDateChange: (date: Date) => void;
-}) {
+}
+
+export function WorkoutDateForm({ onDateChange }: WorkoutDateFormProps) {
   const [overlay, setOverlay] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

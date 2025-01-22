@@ -1,7 +1,7 @@
 import { format, isAfter, isBefore, isToday } from "date-fns";
 import { ChevronLeft, ChevronRight, Circle } from "lucide-react";
 import { useCalendar } from "@/hooks/useCalendar.tsx";
-import { WorkoutDateInput } from "@/components/workout-date-input/WorkoutDateInput.tsx";
+import { WorkoutDateForm } from "@/components/workout-date-form/WorkoutDateForm.tsx";
 import { Link } from "react-router-dom";
 import {
   formatDateForScreenReaders,
@@ -55,7 +55,7 @@ export default function Calendar() {
           </button>
         </div>
       </div>
-      <WorkoutDateInput onDateChange={handleDateChange} />
+      <WorkoutDateForm onDateChange={handleDateChange} />
       <WorkoutLegend />
       <hr className="col-span-7" />
       <ol className="grid grid-cols-7 gap-4">
