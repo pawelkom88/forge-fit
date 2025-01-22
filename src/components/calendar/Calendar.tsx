@@ -86,7 +86,7 @@ interface WorkoutDetailsLinkProps {
   currentMonth: Date;
 }
 
-function WorkoutDetailsLink({
+export function WorkoutDetailsLink({
   data,
   monthDay,
   currentMonth,
