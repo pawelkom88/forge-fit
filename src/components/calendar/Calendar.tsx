@@ -16,7 +16,7 @@ import { useFetch } from "@/hooks/useFetch.ts";
 import { Workout } from "@/utils/workoutData.ts";
 import { ErrorAlert } from "@/components/alert/Alert.tsx";
 
-export default function Calendar() {
+export function Calendar() {
   const { data, loading, error } = useFetch<Workout[]>();
   const { value } = useLocalStorage("workoutDate", null);
   const {

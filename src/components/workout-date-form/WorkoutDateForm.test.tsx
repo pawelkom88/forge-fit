@@ -1,9 +1,9 @@
 import { screen } from "@testing-library/react";
 import { WorkoutDateForm } from "./WorkoutDateForm";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import { customRender } from "../../../tests/utils.tsx";
-import Calendar from "@/components/calendar/Calendar.tsx";
+import { Calendar } from "@/components/calendar/Calendar.tsx";
 import { BrowserRouter } from "react-router-dom";
 import * as hooks from "@/hooks/useCalendar";
 
@@ -14,48 +14,6 @@ vi.mock("@/hooks/useFetch", () => ({
         workoutId: "1",
         userId: "user123",
         date: "2025-12-31T00:00:00.000Z",
-        notes: "Leg day workout focused on strength.",
-        exercises: [
-          {
-            exerciseId: "1",
-            name: "Squats",
-            muscleGroup: "Legs",
-            sets: [
-              {
-                setId: "set1",
-                weight: 100,
-                reps: 10,
-              },
-              {
-                setId: "set2",
-                weight: 110,
-                reps: 8,
-              },
-              {
-                setId: "set3",
-                weight: 120,
-                reps: 6,
-              },
-            ],
-          },
-          {
-            exerciseId: "2",
-            muscleGroup: "Chest",
-            name: "Bench press",
-            sets: [
-              {
-                setId: "set1",
-                weight: 200,
-                reps: 12,
-              },
-              {
-                setId: "set2",
-                weight: 220,
-                reps: 10,
-              },
-            ],
-          },
-        ],
       },
     ],
     isLoading: false,
@@ -69,14 +27,16 @@ vi.mock("@/hooks/useCalendar", () => ({
 
 describe("WorkoutDateForm", () => {
   describe("validation", () => {
-    // TODO: correct
     let user: ReturnType<typeof userEvent.setup>;
-    beforeEach(() => {
-      const { user: x } = customRender(
+
+    const setup = async () => {
+      const { user: generatedUser } = customRender(
         <WorkoutDateForm onDateChange={() => {}} />,
       );
-      user = x;
-    });
+      user = generatedUser;
+    };
+
+    beforeEach(setup);
 
     it("should display an error message when a year is less than 2025", async () => {
       const input = screen.getByRole("textbox");
@@ -117,8 +77,9 @@ describe("WorkoutDateForm", () => {
     });
   });
 
-  describe("submit", () => {
+  describe("should", () => {
     beforeEach(() => {
+      // @ts-expect-error mock
       (hooks.useCalendar as vi.Mock).mockImplementation(() => ({
         currentMonth: new Date(2025, 11, 31),
         monthDays: [new Date(2025, 11, 31)],
@@ -128,7 +89,7 @@ describe("WorkoutDateForm", () => {
       }));
     });
 
-    it("should focus inputted date in the Calendar", () => {
+    it("focus inputted date in the Calendar", () => {
       const { user } = customRender(
         <BrowserRouter>
           <Calendar />
@@ -141,6 +102,26 @@ describe("WorkoutDateForm", () => {
       user.keyboard("{Enter}");
 
       expect(calendarLink).toHaveFocus();
+    });
+
+    it("clear inputted date after clicking the reset button", () => {
+      const { user } = customRender(
+        <BrowserRouter>
+          <Calendar />
+        </BrowserRouter>,
+      );
+
+      const calendarLink = screen.getByRole("link");
+      const input = screen.getByRole("textbox");
+
+      user.type(input, "2025-12-31");
+      user.keyboard("{Enter}");
+
+      const resetButton = screen.getByRole("button", { name: "Reset" });
+      user.click(resetButton);
+
+      expect(calendarLink).not.toHaveFocus();
+      expect(input).toHaveValue("");
     });
   });
 });

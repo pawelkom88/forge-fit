@@ -3,7 +3,7 @@ import { addDays, isSameDay, startOfWeek, subDays } from "date-fns";
 import { Workout } from "@/utils/workoutData.ts";
 
 export function removeThemeClasses(
-  themes: keyof typeof THEME_CONFIG,
+  themes: typeof THEME_CONFIG,
   rootElement: HTMLElement,
 ): void {
   if (!rootElement) return;

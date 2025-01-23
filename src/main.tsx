@@ -6,6 +6,7 @@ import {
   ThemeProvider,
   UI_THEME,
 } from "@/components/theme-provider.tsx";
+// @ts-expect-error font-import
 import "@fontsource/prompt";
 import { RouterProvider } from "react-router-dom";
 import { router } from "@/routing/routes.tsx";

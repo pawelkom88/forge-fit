@@ -1,4 +1,4 @@
-import Calendar from "@/components/calendar/Calendar.tsx";
+import { Calendar } from "@/components/calendar/Calendar.tsx";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import { SettingsIcon } from "lucide-react";
 import { Link } from "react-router-dom";
