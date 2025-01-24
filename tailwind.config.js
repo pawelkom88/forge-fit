@@ -40,6 +40,7 @@ module.exports = {
         teriary: "hsl(var(--teriary))",
         quaternary: "hsl(var(--quaternary))",
         quinary: "hsl(var(--quinary))",
+        section: "hsl(var(--section))",
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",

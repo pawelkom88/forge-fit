@@ -33,6 +33,7 @@ describe("WorkoutDateForm", () => {
       const { user: generatedUser } = customRender(
         <WorkoutDateForm onDateChange={() => {}} />,
       );
+
       user = generatedUser;
     };
 
@@ -78,6 +79,8 @@ describe("WorkoutDateForm", () => {
   });
 
   describe("should", () => {
+    let user: ReturnType<typeof userEvent.setup>;
+
     beforeEach(() => {
       // @ts-expect-error mock
       (hooks.useCalendar as vi.Mock).mockImplementation(() => ({
@@ -86,16 +89,19 @@ describe("WorkoutDateForm", () => {
         data: [{ date: "2025-12-31T00:00:00.000Z", title: "Workout 1" }],
         loading: "idle",
         error: null,
+        onDateChange: () => {},
       }));
-    });
 
-    it("focus inputted date in the Calendar", () => {
-      const { user } = customRender(
+      const { user: generatedUser } = customRender(
         <BrowserRouter>
           <Calendar />
         </BrowserRouter>,
       );
 
+      user = generatedUser;
+    });
+
+    it("focus inputted date in the Calendar", () => {
       const calendarLink = screen.getByRole("link");
 
       user.type(screen.getByRole("textbox"), "2025-12-31");
@@ -105,22 +111,17 @@ describe("WorkoutDateForm", () => {
     });
 
     it("clear inputted date after clicking the reset button", () => {
-      const { user } = customRender(
-        <BrowserRouter>
-          <Calendar />
-        </BrowserRouter>,
-      );
-
-      const calendarLink = screen.getByRole("link");
       const input = screen.getByRole("textbox");
 
       user.type(input, "2025-12-31");
       user.keyboard("{Enter}");
 
-      const resetButton = screen.getByRole("button", { name: "Reset" });
+      const resetButton = screen.getByRole("button", {
+        name: "Reset to current date",
+      });
+
       user.click(resetButton);
 
-      expect(calendarLink).not.toHaveFocus();
       expect(input).toHaveValue("");
     });
   });

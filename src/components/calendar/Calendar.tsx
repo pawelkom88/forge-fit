@@ -33,7 +33,7 @@ export function Calendar() {
   }
 
   return (
-    <section className="bg-foreground rounded-lg p-2 sm:p-4 flex flex-col border">
+    <section className="bg-section rounded-lg p-2 sm:p-4 flex flex-col border">
       <div className="flex justify-between items-center mb-2">
         <CalendarHeading currentMonth={currentMonth} />
         <div className="flex space-x-2">
