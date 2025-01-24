@@ -44,6 +44,7 @@
     .dark {
         --text-primary: 0 0% 100%;
         --foreground: 0 0% 9%;
+        --section: 0 0% 9%;
         --background: 210, 4%, 10%;
         /*--background: 240 10% 3.9%;*/
         /*--foreground: 0 0% 98%;*/

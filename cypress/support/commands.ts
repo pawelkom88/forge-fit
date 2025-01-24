@@ -35,3 +35,14 @@
 //     }
 //   }
 // }
+
+Cypress.Commands.add("testById", (id) => {
+  cy.get(`[data-test-id=${id}]`);
+});
+
+// Cypress.Commands.add("loginByApi", (username, password) => {
+//     return cy.request("POST", `http://localhost:3000/login`, {
+//         username,
+//         password,
+//     })
+// })

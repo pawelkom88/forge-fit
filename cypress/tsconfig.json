@@ -1,0 +1,18 @@
+{
+  "extends": "../tsconfig.app.json",
+  "include": [
+    "./support/cypress.d.ts",
+    "../cypress/**/*.ts",
+    "../cypress.config.ts",
+    "../node_modules/cypress/**/*.ts",
+    "src/**/*.ts"
+  ],
+  "exclude": [],
+  "compilerOptions": {
+    "types": ["cypress"],
+    "lib": ["es2015", "dom"],
+    "isolatedModules": false,
+    "allowJs": true,
+    "noEmit": true
+  }
+}

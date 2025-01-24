@@ -15,6 +15,7 @@ export default function App() {
             <h1 className="text-2xl sm:text-3xl font-bold">Workout Calendar</h1>
           </div>
           <Link
+            data-test-id="user-profile-link"
             to={`${RoutesConfig.userProfile.path}`}
             className="h-9 w-9 flex items-center justify-center rounded border border-input shadow-sm
             hover:bg-contrast hover:text-contrastReversed bg-accent focus-visible:bg-focusVisible transition-colors duration-200"
