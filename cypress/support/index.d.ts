@@ -7,7 +7,7 @@ declare namespace Cypress {
       options?: Partial<TypeOptions>,
     ): Chainable<Element>;
     visit(
-      originalFn: CommandOriginalFn,
+      originalFn: CommandOriginalFn<keyof Chainable>,
       url: string,
       options: Partial<VisitOptions>,
     ): Chainable<Element>;

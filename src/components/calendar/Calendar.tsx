@@ -38,6 +38,7 @@ export function Calendar() {
         <CalendarHeading currentMonth={currentMonth} />
         <div className="flex space-x-2">
           <button
+            data-test-id="previous-month"
             aria-label="Previous month"
             onClick={goToPreviousMonth}
             className="text-contrastReversed hover:text-contrast p-2 rounded-full hover:bg-background
@@ -46,6 +47,7 @@ export function Calendar() {
             <ChevronLeft aria-hidden="true" size={24} />
           </button>
           <button
+            data-test-id="next-month"
             aria-label="Next month"
             onClick={goToNextMonth}
             className="text-contrastReversed hover:text-contrast p-2 rounded-full hover:bg-background
@@ -160,6 +162,7 @@ function CalendarHeading({ currentMonth }: { currentMonth: Date }) {
   return (
     <div>
       <h2
+        data-test-id="calendar-heading"
         aria-describedby="current-month"
         className="text-xl sm:text-2xl font-semibold "
       >

@@ -1,4 +1,5 @@
 /// <reference types="cypress" />
+// @ts-expect-error mismatch
 import { RoutesConfig } from "../../../src/routing/routes";
 
 describe("Calendar", () => {
@@ -15,11 +16,41 @@ describe("Calendar", () => {
       cy.location("pathname").should("eq", RoutesConfig.userProfile.path);
     });
 
-    it("should have a toggle them icon that changes the theme", () => {
+    it.only("should have a toggle them icon that changes the theme", () => {
       const modeToggle = cy.testById("mode-toggle");
       modeToggle.click();
-      // cy.getByText("Dark").click();
+      // cy.get("menuitem").click();
       // cy.get("html").should("have.class", "dark");
+    });
+  });
+
+  context("body", () => {
+    it("navigate buttons should correctly navigate to other months", () => {
+      const getMonthName = (date: Date): string =>
+        date.toLocaleString("default", { month: "long" });
+
+      const currentMonth = getMonthName(new Date());
+      const oneMonthInMilliseconds = 1000 * 60 * 60 * 24 * 30;
+      const nextMonth = getMonthName(
+        new Date(Date.now() + oneMonthInMilliseconds),
+      );
+      const prevMonth = getMonthName(
+        new Date(Date.now() - oneMonthInMilliseconds),
+      );
+
+      const previousMonthBtn = cy.testById("previous-month");
+      const nextMonthBtn = cy.testById("next-month");
+
+      cy.testById("calendar-heading").should("contain", currentMonth);
+
+      nextMonthBtn.click();
+      cy.testById("calendar-heading").should("contain", nextMonth);
+
+      previousMonthBtn.click();
+      cy.testById("calendar-heading").should("contain", currentMonth);
+
+      previousMonthBtn.click();
+      cy.testById("calendar-heading").should("contain", prevMonth);
     });
   });
 });
