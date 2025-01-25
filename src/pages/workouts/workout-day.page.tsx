@@ -7,7 +7,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs.tsx";
 import { WeekNavigator } from "@/components/week-navigator.tsx";
-import { WorkoutTracker } from "@/components/workout-tracker.tsx";
+import { WorkoutTracker } from "@/components/workout-tracker/workout-tracker.tsx";
 import { NutritionTracker } from "@/components/nutrition-tracker.tsx";
 import { Link, useParams } from "react-router-dom";
 import { DateString } from "@/utils/ts-helpers.ts";

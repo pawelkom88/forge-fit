@@ -3,10 +3,8 @@ import { ModeToggle } from "@/components/mode-toggle.tsx";
 import { SettingsIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { RoutesConfig } from "@/routing/routes.tsx";
-import { useLeavePage } from "@/hooks/useLeavePage.tsx";
 
 export default function App() {
-  useLeavePage(() => localStorage.removeItem("workoutDate"));
   return (
     <div className="max-w-screen-2xl mx-auto flex h-screen bg-foreground">
       <main className="bg-background flex-1 p-4 sm:p-6 lg:p-8">

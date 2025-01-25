@@ -19,13 +19,71 @@ export interface Workout {
   exercises: Exercise[];
 }
 
-export const commonExercises: { [key: string]: string[] } = {
-  Chest: ["Bench Press", "Push-ups", "Chest Flyes"],
-  Back: ["Pull-ups", "Rows", "Lat Pulldowns"],
-  Legs: ["Squats", "Lunges", "Leg Press"],
-  Shoulders: ["Overhead Press", "Lateral Raises", "Front Raises"],
-  Arms: ["Bicep Curls", "Tricep Extensions", "Hammer Curls"],
-  Core: ["Crunches", "Planks", "Russian Twists"],
+export const commonExercises: Record<string, string[]> = {
+  Chest: [
+    "Bench Press",
+    "Push-ups",
+    "Chest Flyes",
+    "Incline Bench Press",
+    "Dips",
+    "Cable Crossovers",
+    "Decline Bench Press",
+  ],
+  Back: [
+    "Pull-ups",
+    "Rows",
+    "Lat Pulldowns",
+    "Deadlifts",
+    "T-Bar Rows",
+    "Seated Cable Rows",
+    "Good Mornings",
+    "Face Pulls",
+  ],
+  Legs: [
+    "Squats",
+    "Lunges",
+    "Leg Press",
+    "Deadlifts",
+    "Romanian Deadlifts",
+    "Leg Extensions",
+    "Leg Curls",
+    "Calf Raises",
+    "Step-Ups",
+    "Hack Squats",
+  ],
+  Shoulders: [
+    "Overhead Press",
+    "Lateral Raises",
+    "Front Raises",
+    "Arnold Press",
+    "Upright Rows",
+    "Reverse Flyes",
+    "Face Pulls",
+  ],
+  Arms: [
+    "Bicep Curls",
+    "Tricep Extensions",
+    "Hammer Curls",
+    "Preacher Curls",
+    "Skull Crushers",
+    "Tricep Dips",
+    "Concentration Curls",
+    "Overhead Tricep Extensions",
+    "Cable Curls",
+    "Diamond Push-ups",
+  ],
+  Core: [
+    "Crunches",
+    "Planks",
+    "Russian Twists",
+    "Leg Raises",
+    "Mountain Climbers",
+    "Cable Twists",
+    "Hanging Leg Raises",
+    "Ab Rollouts",
+    "Dead Bugs",
+    "Side Planks",
+  ],
 };
 
 // TODO: grab data structure from DB structure image/flow chart
