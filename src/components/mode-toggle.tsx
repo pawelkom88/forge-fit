@@ -32,6 +32,7 @@ export function ModeToggle() {
           const themeName = key.charAt(0).toUpperCase() + key.slice(1);
           return (
             <DropdownMenuItem
+              data-test-id={`mode-toggle-${value}`}
               className="cursor-pointer hover:bg-contrast"
               key={key}
               onClick={() => setTheme(value)}

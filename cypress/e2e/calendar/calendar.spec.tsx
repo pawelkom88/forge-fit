@@ -1,6 +1,4 @@
 /// <reference types="cypress" />
-// @ts-expect-error mismatch
-import { RoutesConfig } from "../../../src/routing/routes";
 
 describe("Calendar", () => {
   beforeEach(() => {
@@ -13,14 +11,19 @@ describe("Calendar", () => {
     it("should have a icon/link that leads to user profile page", () => {
       const userProfileIconLink = cy.testById("user-profile-link");
       userProfileIconLink.click();
-      cy.location("pathname").should("eq", RoutesConfig.userProfile.path);
+      cy.location("pathname").should("eq", "/user-profile");
     });
 
-    it.only("should have a toggle them icon that changes the theme", () => {
-      const modeToggle = cy.testById("mode-toggle");
-      modeToggle.click();
-      // cy.get("menuitem").click();
-      // cy.get("html").should("have.class", "dark");
+    it("should have a toggle them icon that changes the theme", () => {
+      cy.testById("mode-toggle").click();
+      cy.testById("mode-toggle-light").click();
+      cy.get("html").should("have.class", "light");
+
+      // Break up the chain for the dark mode toggle
+      cy.testById("mode-toggle-dark").as("darkModeToggle");
+      cy.get("@darkModeToggle").click();
+
+      cy.get("html").should("have.class", "dark");
     });
   });
 
@@ -52,5 +55,17 @@ describe("Calendar", () => {
       previousMonthBtn.click();
       cy.testById("calendar-heading").should("contain", prevMonth);
     });
+
+    it("should show today's date with the right background color", () => {
+      const today = new Date().toISOString().split("T")[0];
+      cy.get(`[data-date="${today}"]`).should("have.class", "bg-teriary");
+    });
+
+    // TODO: wait for supabase to be set up
+    // it.only("should show workout dates with right background colors", () => {
+    //   // mock api call
+    //   cy.intercept("GET", "/workouts").as("getWorkouts");
+    //   cy.wait("@getWorkouts");
+    // });
   });
 });
