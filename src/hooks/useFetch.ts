@@ -28,6 +28,7 @@ export const useFetch = <T>(url?: string): Data<T> => {
       try {
         await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulating a delay
         const fetchedData = url ? workoutDetailsLoader(url) : workouts;
+        //@ts-expect-error test
         setData(fetchedData);
         setLoading("complete");
       } catch (error: unknown) {

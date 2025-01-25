@@ -2,7 +2,7 @@
 
 describe("Calendar", () => {
   beforeEach(() => {
-    cy.visit(Cypress.config().baseUrl);
+    cy.visit("http://localhost:5173/app");
     cy.viewport("macbook-16");
   });
 

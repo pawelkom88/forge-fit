@@ -15,7 +15,7 @@ describe("helpers function", () => {
   describe("removeThemeClasses", () => {
     it("returns early when the root element is null", () => {
       const rootElement = document.createElement("div");
-
+      // @ts-expect-error testing
       removeThemeClasses(THEME_CONFIG.light, rootElement);
       expect(rootElement.classList.contains(THEME_CONFIG.light)).toBeFalsy();
     });
@@ -23,7 +23,7 @@ describe("helpers function", () => {
     it("removes the theme classes from the root element", () => {
       const themes = Object.values(THEME_CONFIG) as Theme[];
       const rootElement = document.createElement("div");
-
+      // @ts-expect-error testing
       removeThemeClasses(THEME_CONFIG.light, rootElement);
 
       Object.values(themes).forEach((theme) => {

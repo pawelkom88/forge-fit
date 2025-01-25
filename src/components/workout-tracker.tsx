@@ -28,7 +28,7 @@ interface Props {
   setWorkoutDetails: (workout: Workout | null) => void;
 }
 
-export function WorkoutTracker({ workoutDetails, setWorkoutDetails }: Props) {
+export function WorkoutTracker({ workoutDetails }: Props) {
   const [newExercise, setNewExercise] = useState<Exercise>({
     name: "",
     exerciseId: "",
@@ -244,7 +244,7 @@ function WorkoutDetailsCard({ exercise, onAddSet }: WorkoutDetailsCardProps) {
                   type="number"
                   value={set.weight}
                   onChange={
-                    (e) => console.log("updating set")
+                    () => console.log("updating set")
                     // updateSet(
                     //   exercise.exerciseId,
                     //   setIndex,
@@ -260,7 +260,7 @@ function WorkoutDetailsCard({ exercise, onAddSet }: WorkoutDetailsCardProps) {
                   type="number"
                   value={set.reps}
                   onChange={
-                    (e) => console.log("updating set")
+                    () => console.log("updating set")
                     // updateSet(
                     //   exercise.exerciseId,
                     //   setIndex,

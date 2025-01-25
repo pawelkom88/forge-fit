@@ -34,7 +34,7 @@ export default function WorkoutDayPage() {
   const { data, loading, error } = useFetch<Workout>(workoutDate);
   // TODO: what to do with state - move down to tracker - collect all and send to server ? ?
   const [workoutDetails, setWorkoutDetails] = useState<Workout | null>(data);
-
+  console.log(workoutDetails);
   if (error) {
     return <ErrorAlert title="Error" description={error.message} />;
   }
