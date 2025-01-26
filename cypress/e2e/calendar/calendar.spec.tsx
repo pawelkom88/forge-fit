@@ -1,4 +1,6 @@
 /// <reference types="cypress" />
+const getMonthName = (date: Date): string =>
+  date.toLocaleString("default", { month: "long" });
 
 describe("Calendar", () => {
   beforeEach(() => {
@@ -6,7 +8,6 @@ describe("Calendar", () => {
     cy.viewport("macbook-16");
   });
 
-  //add context
   context("header", () => {
     it("should have a icon/link that leads to user profile page", () => {
       const userProfileIconLink = cy.testById("user-profile-link");
@@ -14,24 +15,22 @@ describe("Calendar", () => {
       cy.location("pathname").should("eq", "/user-profile");
     });
 
-    it("should have a toggle them icon that changes the theme", () => {
-      cy.testById("mode-toggle").click();
-      cy.testById("mode-toggle-light").click();
-      cy.get("html").should("have.class", "light");
+    it("should show a modal dialog after clicking a helper icon button", () => {
+      const helperButton = cy.testById("helper-button");
+      helperButton.click();
+      cy.testById("helper-modal").should("be.visible");
+    });
 
-      // Break up the chain for the dark mode toggle
-      cy.testById("mode-toggle-dark").as("darkModeToggle");
-      cy.get("@darkModeToggle").click();
-
-      cy.get("html").should("have.class", "dark");
+    it("modal dialog can be dismissed by clicking the close button", () => {
+      const helperButton = cy.testById("helper-button");
+      helperButton.click();
+      cy.testById("close-modal-btn").click();
+      cy.testById("helper-modal").should("not.be.visible");
     });
   });
 
   context("body", () => {
     it("navigate buttons should correctly navigate to other months", () => {
-      const getMonthName = (date: Date): string =>
-        date.toLocaleString("default", { month: "long" });
-
       const currentMonth = getMonthName(new Date());
       const oneMonthInMilliseconds = 1000 * 60 * 60 * 24 * 30;
       const nextMonth = getMonthName(

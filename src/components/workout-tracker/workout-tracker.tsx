@@ -40,7 +40,7 @@ export function WorkoutTracker({ workoutDetails }: Props) {
     sets: [{ setId: "set1", weight: 0, reps: 0 }],
   });
 
-  console.table(newExercise);
+  console.table(workoutDetails);
 
   // const addExercise = () => {
   //   if (newExercise.exerciseId) {
@@ -253,7 +253,7 @@ interface AddExerciseDialogProps {
   setNewExercise: (exercise: Exercise) => void;
 }
 
-function AddExerciseDialog({
+export function AddExerciseDialog({
   newExercise,
   setNewExercise,
 }: AddExerciseDialogProps) {
@@ -330,7 +330,6 @@ function AddExerciseDialog({
             )}
           </div>
         )}
-
         {!toggleCustomExercise &&
           newExercise.muscleGroup &&
           newExercise.name && (

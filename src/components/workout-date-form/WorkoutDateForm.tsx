@@ -105,17 +105,21 @@ function Alert({ onShowAlert }: { onShowAlert: () => void }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger
+        data-test-id="helper-button"
         aria-label="Open popover with more information"
         onClick={onShowAlert}
       >
         <CircleHelp className="ml-2" size={18} />
       </AlertDialogTrigger>
-      <AlertDialogContent className="max-w-[350px] rounded sm:max-w-[500px]">
+      <AlertDialogContent
+        data-test-id="helper-modal"
+        className="max-w-[350px] rounded sm:max-w-[500px]"
+      >
         <AlertDialogHeader>
-          <AlertDialogTitle>How it works ?</AlertDialogTitle>
-          <AlertDialogDescription className="text-black text-lg text-pretty">
+          <AlertDialogTitle>How does it works ?</AlertDialogTitle>
+          <AlertDialogDescription className="text-contrast text-lg text-pretty">
             Enter the date in YYYY-MM-DD format. After inputting the date, press{" "}
-            <kbd className="bg-gray-200 rounded px-1 py-0.5 text-sm font-mono border border-gray-400 shadow-sm">
+            <kbd className="bg-gray-200 rounded px-1 py-0.5 text-sm text-black font-mono border border-gray-400 shadow-sm">
               Enter
             </kbd>{" "}
             key and the date will be searched in the calendar below. Dashes are
@@ -123,7 +127,10 @@ function Alert({ onShowAlert }: { onShowAlert: () => void }) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="hover:bg-teriary bg-black hover:text-white text-white">
+          <AlertDialogCancel
+            data-test-id="close-modal-btn"
+            className="hover:bg-teriary bg-black hover:text-white text-white"
+          >
             Close
           </AlertDialogCancel>
         </AlertDialogFooter>

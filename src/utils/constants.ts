@@ -1,5 +1,3 @@
-import { commonExercises } from "@/utils/workoutData.ts";
-
 export const DATE_PATTERN = {
   YYYY_MM_DD: "yyyy-MM-dd",
   DAY: "d",
