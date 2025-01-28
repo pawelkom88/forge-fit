@@ -18,7 +18,7 @@
       "@/lib": ["./src/lib/*"],
       "@/types": ["./src/types/*"]
     },
-    "types": ["@testing-library/jest-dom","vitest", "node","cypress"]
+    "types": ["@testing-library/jest-dom","vitest", "node","cypress"],
   }
 }
 
