@@ -107,10 +107,10 @@ export function NutritionTracker() {
   }
   return (
     <>
-      <h1 className="text-center my-4 text-pretty">
+      <h2 className="text-center my-4 text-pretty">
         You have not added any data yet. Click button below to add your
         nutrition targets.
-      </h1>
+      </h2>
       {/*{target && <MacrosCard nutrition={nutrition} />}*/}
       {/*<AddNutritionTargetForm />*/}
       {/*{target && (*/}

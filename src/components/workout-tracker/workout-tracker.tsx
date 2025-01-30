@@ -107,9 +107,9 @@ export function WorkoutTracker({ workoutDetails }: Props) {
   return (
     <>
       {!hasExercises ? (
-        <h1 className="text-center my-4 text-pretty">
+        <h2 className="text-center my-4 text-pretty">
           You have not added any exercise yet. Click button below to add one.
-        </h1>
+        </h2>
       ) : (
         <div className="flex flex-col">
           {workoutDetails?.exercises?.map((exercise) => (

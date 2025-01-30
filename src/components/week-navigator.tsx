@@ -4,7 +4,7 @@ import React from "react";
 import useMediaQuery from "@/hooks/useMediaQuery";
 
 export function WeekNavigator({ children }: { children: React.ReactNode }) {
-  const matches = useMediaQuery("(min-width: 1024px)");
+  const matches = useMediaQuery("(max-width: 1024px)");
 
   return (
     <>
