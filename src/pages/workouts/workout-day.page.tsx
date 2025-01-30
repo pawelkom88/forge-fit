@@ -11,7 +11,6 @@ import { WorkoutTracker } from "@/components/workout-tracker/workout-tracker.tsx
 import { NutritionTracker } from "@/components/nutrition-tracker.tsx";
 import { Link, useParams } from "react-router-dom";
 import { DateString } from "@/utils/ts-helpers.ts";
-import { useTheme } from "@/components/theme-provider.tsx";
 import { RoutesConfig } from "@/routing/routes.tsx";
 import { DATE_PATTERN } from "@/utils/constants.ts";
 import type { Workout } from "@/utils/workoutData.ts";
@@ -94,12 +93,10 @@ interface WorkoutDayNavigationProps {
 }
 
 function WorkoutDayTabs({ tracker, nutrition }: WorkoutDayNavigationProps) {
-  const { isLightTheme } = useTheme();
-
   return (
     <Tabs defaultValue="workout" className="mt-6">
       <TabsList
-        className={`grid gap-2 w-full grid-cols-2 ${isLightTheme ? "bg-purple" : "bg-white"} ${isLightTheme ? "text-white" : "text-black"}`}
+        className={`grid gap-2 w-full grid-cols-2 bg-purple dark:bg-white text-white dark:text-black`}
       >
         <TabsTrigger id="workout" className="hover:bg-teriary" value="workout">
           Workout
