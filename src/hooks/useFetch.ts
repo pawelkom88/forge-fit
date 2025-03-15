@@ -9,11 +9,17 @@ type Data<T> = {
   error: Error | null;
 };
 
-type LoadingState = "idle" | "pending" | "complete";
+export const loadingState = {
+  idle: "idle",
+  pending: "pending",
+  complete: "complete",
+} as const;
+
+type LoadingState = keyof typeof loadingState;
 
 export const useFetch = <T>(url?: string): Data<T> => {
   const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState<LoadingState>("idle");
+  const [loading, setLoading] = useState<LoadingState>(loadingState.idle);
   const [error, setError] = useState<Error | null>(null);
   const controller = useRef<AbortController | null>(null);
 
@@ -23,19 +29,19 @@ export const useFetch = <T>(url?: string): Data<T> => {
         controller.current.abort();
       }
       controller.current = new AbortController();
-      setLoading("pending");
+      setLoading(loadingState.pending);
 
       try {
         await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulating a delay
         const fetchedData = url ? workoutDetailsLoader(url) : workouts;
         //@ts-expect-error test
         setData(fetchedData);
-        setLoading("complete");
+        setLoading(loadingState.complete);
       } catch (error: unknown) {
         if (error instanceof Error) {
           if (error.name !== "AbortError") {
             setError(error);
-            setLoading("idle");
+            setLoading(loadingState.idle);
           }
         }
       }

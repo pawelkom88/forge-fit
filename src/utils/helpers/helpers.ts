@@ -1,6 +1,8 @@
 import { Theme, THEME_CONFIG } from "@/components/theme-provider.tsx";
-import { addDays, isSameDay, startOfWeek, subDays } from "date-fns";
+import { addDays, format, isSameDay, startOfWeek, subDays } from "date-fns";
 import { Workout } from "@/utils/workoutData.ts";
+import { DateString } from "@/utils/ts-helpers.ts";
+import { DATE_PATTERN } from "@/utils/constants.ts";
 
 export function removeThemeClasses(
   themes: typeof THEME_CONFIG,
@@ -79,4 +81,27 @@ export function generateWeekDays(
     date: weekDay,
     isWorkoutDay: doesWorkoutExistOnDate(workouts, weekDay),
   }));
+}
+
+// TODO tests !
+export function generatePreviousWeek(referenceDate: Date): Date {
+  const firstDayOfCurrentView = subDays(referenceDate, 6);
+  return subDays(firstDayOfCurrentView, 1);
+}
+
+export function generateNextWeek(referenceDate: Date): Date {
+  const lastDayOfCurrentView = addDays(referenceDate, 6);
+  return addDays(lastDayOfCurrentView, 1);
+}
+
+export function formatToDateString(date: Date): DateString {
+  const formatted = format(date, DATE_PATTERN.YYYY_MM_DD);
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(formatted)) {
+    throw new Error(
+      `Invalid date format: ${formatted}. Expected format: YYYY-MM-DD`,
+    );
+  }
+
+  return formatted as DateString;
 }

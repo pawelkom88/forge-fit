@@ -40,8 +40,6 @@ export function WorkoutTracker({ workoutDetails }: Props) {
     sets: [{ setId: "set1", weight: 0, reps: 0 }],
   });
 
-  console.table(workoutDetails);
-
   // const addExercise = () => {
   //   if (newExercise.exerciseId) {
   //     setWorkoutDetails((workout) => ({
